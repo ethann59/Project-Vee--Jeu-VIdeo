@@ -28,7 +28,7 @@ class Ennemi:
     inventaire = [] # Je sais pas si ça sera utilisé mais ça peut être utile si on veut qu'il se soigne par exemple
     quest_object = [] # Objet de quête qui sera donné au joueur si meurt (si il en a un)
     final_boss = False # Si c'est le boss final (ça permet de désactiver l'evenement "Police" ou la fuite)
-    arme = [] # Arme
+    arme = [] # Arme (pour le jeu)
     
     def __init__(self): #Temporaire, à voir pour créer les différents ennemis
         self.nom = "Ennemi"

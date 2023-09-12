@@ -1,2 +1,4 @@
 import pygame as pg
-import structure
+import data0, data1
+
+version = "0.0.2"

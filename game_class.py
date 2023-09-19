@@ -1,4 +1,9 @@
-Plateau = [[]]
+Plateau = []
+
+def inialize_plateau(n):
+    for i in range(n):
+        Plateau.append([n, ""])
+
 
 class Joueur:
     nom = ""
@@ -8,6 +13,8 @@ class Joueur:
     gold = 0 # Or
     inventaire = [] # Inventaire
     arme = [] # Arme
+    Score = 0 # Score
+    Timer = 0 # Timer (dans le cas de la partie démo la partie est limité à 15 minutes donc on va mettre un timer par tour de 1 minute max)
     
     def __init__(self):
         self.nom = "Joueur"
@@ -71,6 +78,17 @@ class game_settings:
     pam_player = 0 # Permet de changer les points d'armure du joueur au lancement de la partie
     patt_player = 10 # Permet de changer les points d'attaque du joueur au lancement de la partie
     gold_player = 0 # Permet de changer l'or du joueur au lancement de la partie
+    nb_player = 1 # Permet de changer le nombre de joueurs
     enemy_power = 1 # Permet de changer la puissance des ennemis (1 = normal, 2 = double, 0.5 = moitié)
     hospital_price = 10 # Permet de changer le prix de l'hopital
+    time_limit = 15 # Permet de changer le temps limite de la partie (en minutes), si elle est à 0, la partie n'est pas limité dans le temps
     
+    
+# Partie réservé au calcul des scores. Elle sont basés sur les points de vie restants, l'or mais aussi les ennemis tués, les items de quetes ramassés, etc...
+
+# Je devrais pas faire un dictionnaire ?
+score_panel = [["Points de vie restants", 0], # Dépend des points de vie restants
+               ["Or", 0], # Dépend de l'or (voire si il faut nerf ce compteur)
+               ["Ennemis tués", 20], # Dépend du nombre d'ennemis tués, à voir pour gérer en fonction de la puissance des ennemis
+               ["Items de quêtes ramassés", 150], # Dépend du nombre d'items de quêtes ramassés
+               ["Boss final vaincu", 250]] 

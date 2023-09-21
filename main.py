@@ -20,32 +20,30 @@ texte = font.render("Votre texte ici", True, (55, 42, 60))  # Texte blanc avec a
 plateau_img = pygame.image.load("plateau.jpg")
 plateau_img = pygame.transform.scale(plateau_img, (648, 644)) 
 
-# Variables graphiques
 
+# Initialisation de Pygame
+pygame.init()
+
+# Configurer la fenêtre
 taille_fenetre = (1000,644)
+fenetre = pygame.display.set_mode(taille_fenetre)
+pygame.display.set_caption("Project Vee - Developement Build " + version)
 
-def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, fenetre): #Méthode pour dessiner un bouton
-    pygame.draw.rect(fenetre, couleur, (x, y, largeur, hauteur))
-    font = pygame.font.Font(None, 36)
-    texte_surface = font.render(texte, True, (0, 0, 0))
-    texte_rect = texte_surface.get_rect()
-    texte_rect.center = (x + largeur / 2, y + hauteur / 2)
-    fenetre.blit(texte_surface, texte_rect)
-    
 # Couleurs
 BLANC = (255, 255, 255)
 NOIR = (0, 0, 0)
 VERT = (0, 255, 0)
 ROUGE = (255, 0, 0)
 
+# Fonction pour dessiner un bouton
+def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
+    pygame.draw.rect(fenetre, couleur, (x, y, largeur, hauteur))
+    font = pygame.font.Font(None, 36)
+    texte_surface = font.render(texte, True, NOIR)
+    texte_rect = texte_surface.get_rect()
+    texte_rect.center = (x + largeur / 2, y + hauteur / 2)
+    fenetre.blit(texte_surface, texte_rect)
 
-# Initialisation du jeu (affichage, titre du jeu, etc...)
-    ecran = pygame.display.set_mode(taille_fenetre) # Change la taille de la fenêtre
-
-    pygame.display.set_caption("Project Vee - Development Version " + version)
-    jeu_lance = True # Pas toucher, maintient le jeu en marche
-    pygame.display.flip()
-            
 # États du jeu
 ETAT_MENU = 0
 ETAT_JEU = 1
@@ -66,7 +64,7 @@ def menu_principal():
                 elif 250 <= x <= 750 and 300 <= y <= 350:
                     en_cours = False  # Action du bouton "Quitter"
 
-        ecran.fill(BLANC)  # Efface l'écran
+        fenetre.fill(BLANC)  # Efface l'écran
 
         # Dessinez vos boutons dans l'état du menu
         dessiner_bouton(250, 200, 500, 50, VERT, "Jouer")
@@ -82,9 +80,10 @@ def jeu():
             if event.type == pygame.QUIT:
                 en_cours = False
 
-        Game.ecran.fill(NOIR)  # Efface l'écran
+        fenetre.fill(BLANC)  # Efface l'écran
 
-        # Ajoutez ici le code de votre jeu
+        fenetre.fill((255, 255, 255))
+        fenetre.blit(plateau_img, (0,0)) 
 
         pygame.display.flip()
 
@@ -95,8 +94,5 @@ while etat != None:
     elif etat == ETAT_JEU:
         jeu()
 
-if __name__ == "__main__":
-    pygame.init()
-    game = Game()
-    game.event_manager()
-    
+pygame.quit()
+sys.exit()

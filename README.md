@@ -22,3 +22,7 @@ Pour installer le jeu, il suffit de télécharger le fichier .zip et de l'extrai
 
 [A Compléter]
 
+
+## Credits & Licence
+
+Merci ChatGPT pour les bouts de code (lol)

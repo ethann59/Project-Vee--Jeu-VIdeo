@@ -1,55 +1,26 @@
 # Importations des modules
 import pygame, sys
-<<<<<<< Updated upstream
+import pygame.font
 # Importation des fichiers
-import enemy_object_data, game_class, place_data
+import game_class, place_data
+#import enemy_object_data // C'est pour après le temps que je répare le progamme
 
 # Variables globales
 
-version = "0.0.3"
+version = "0.0.4"
+
+# Variables textuels
+
+pygame.font.init()
+font = pygame.font.Font(None, 36)  # Crée une police avec une taille de 36 points (vous pouvez ajuster la taille selon vos besoins)
+texte = font.render("Votre texte ici", True, (55, 42, 60))  # Texte blanc avec antialiasing
+
 
 # Variables du plateau
 plateau_img = pygame.image.load("plateau.jpg")
-plateau_img = pygame.transform.scale(plateau_img, (648, 644))
-plateau_img_pos = (0, 0)
+plateau_img = pygame.transform.scale(plateau_img, (648, 644)) 
 
-class Game:
-    # Classe principale du jeu
-    def __init__(self):
-        # Initialisation du jeu (affichage, titre du jeu, etc...)
-            self.ecran = pygame.display.set_mode((1000, 644)) # Change la taille de la fenêtre
-        
-            pygame.display.set_caption("Project Vee - Development Version " + version)
-            self.jeu_lance = True # Pas toucher, maintient le jeu en marche
-        
-    def event_manager(self):
-        # Gére les événements (clavier, souris, etc...)
-    
-        while self.jeu_lance: # Boucle principale du jeu
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-            # A separer en une fonction distincte afin de se faire les transitions
-            self.ecran.fill((255, 255, 255))
-            self.ecran.blit(plateau_img, plateau_img_pos) 
-        
-            pygame.display.flip()
-            
-    def menu(self):
-        # Menu principal du jeu
-        pass
-    
-    def partie(self):
-        # Plateau du jeu
-        pass
-        
 
-if __name__ == "__main__":
-    pygame.init()
-    game = Game()
-    game.event_manager()
-    
-=======
 import pygame.font
 import time
 # Importation des fichiers
@@ -85,6 +56,7 @@ def inialize_plateau(n):
 plateau_img = pygame.image.load("img/scenes/plateau.jpg")
 plateau_img = pygame.transform.scale(plateau_img, (648, 644))
 
+=======
 # Initialisation de Pygame
 pygame.init()
 
@@ -132,31 +104,25 @@ def menu_principal():
         fenetre.fill(BLANC)  # Efface l'écran
 
         # Dessinez vos boutons dans l'état du menu
-        dessiner_bouton(250, 200, 500, 50, VERT, "Partie rapide")
-        dessiner_bouton(250, 250, 500, 50, GRIS, "Partie personnalisée (non disponible)")
+        dessiner_bouton(250, 200, 500, 50, VERT, "Jouer")
         dessiner_bouton(250, 300, 500, 50, ROUGE, "Quitter")
 
         pygame.display.flip()
 
 # Fonction pour le jeu
-def jeu(duree_timer):
+def jeu():
     en_cours = True
     while en_cours:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 en_cours = False
-                pygame.quit()
-                sys.exit()
 
         fenetre.fill(BLANC)  # Efface l'écran
 
         fenetre.fill((255, 255, 255))
-        fenetre.blit(plateau_img, (0,0))
-        fenetre.blit(timer_text, (700, 10)) # A changer pour afficher le timer
+        fenetre.blit(plateau_img, (0,0)) 
 
         pygame.display.flip()
-        
-        
 
 # Boucle principale
 while etat != None:
@@ -167,4 +133,4 @@ while etat != None:
 
 pygame.quit()
 sys.exit()
->>>>>>> Stashed changes
+

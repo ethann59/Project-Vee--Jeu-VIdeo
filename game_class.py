@@ -36,6 +36,7 @@ class Ennemi:
     quest_object = [] # Objet de quête qui sera donné au joueur si meurt (si il en a un)
     final_boss = False # Si c'est le boss final (ça permet de désactiver l'evenement "Police" ou la fuite)
     arme = [] # Arme (pour le jeu)
+    spawn_taux = 0 # Taux de spawn (pour le jeu) (ça sera un chiffre entre 0 et 1)
     
     def __init__(self): #Temporaire, à voir pour créer les différents ennemis
         self.nom = "Ennemi"
@@ -47,6 +48,7 @@ class Ennemi:
         self.quest_object = []
         self.final_boss = False
         self.arme = ["Simple pistolet"]
+        
 
 
 class Object: #On va définir les objets (armes, armures, potions, etc...) Voir si il y a pas une autre méthode pour stocker les informations
@@ -89,6 +91,6 @@ class game_settings:
 # Je devrais pas faire un dictionnaire ?
 score_panel = [["Points de vie restants", 0], # Dépend des points de vie restants
                ["Or", 0], # Dépend de l'or (voire si il faut nerf ce compteur)
-               ["Ennemis tués", 20], # Dépend du nombre d'ennemis tués, à voir pour gérer en fonction de la puissance des ennemis
+               # ["Ennemis tués", 20], # ça sera calculé en fonction de leur vie voilà !
                ["Items de quêtes ramassés", 150], # Dépend du nombre d'items de quêtes ramassés
                ["Boss final vaincu", 250]] 

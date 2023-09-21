@@ -38,54 +38,62 @@ NOIR = (0, 0, 0)
 VERT = (0, 255, 0)
 ROUGE = (255, 0, 0)
 
-# États du jeu
-etat = 0  # 0 = Menu principal, 1 = Jeu
 
+# Initialisation du jeu (affichage, titre du jeu, etc...)
+    ecran = pygame.display.set_mode(taille_fenetre) # Change la taille de la fenêtre
 
-class Game:
-    # Classe principale du jeu
-    def __init__(self):
-        # Initialisation du jeu (affichage, titre du jeu, etc...)
-            self.ecran = pygame.display.set_mode(taille_fenetre) # Change la taille de la fenêtre
-        
-            pygame.display.set_caption("Project Vee - Development Version " + version)
-            self.jeu_lance = True # Pas toucher, maintient le jeu en marche
-
-            pygame.display.flip()
+    pygame.display.set_caption("Project Vee - Development Version " + version)
+    jeu_lance = True # Pas toucher, maintient le jeu en marche
+    pygame.display.flip()
             
-    def jeu(self):
-        self.jeu_lance = True
-        while self.jeu_lance:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.jeu_lance = False
-                else:
-                    self.ecran.fill((255, 255, 255))
-                    self.ecran.blit(plateau_img, (0,0)) 
-                    self.ecran.blit(texte, (670, 0)) # A modifier pour faire une vrai interface
-         
-    def event_manager(self):
-        # Gére les événements (clavier, souris, etc...)
-    
-        while self.jeu_lance: # Boucle principale du jeu
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    x, y = pygame.mouse.get_pos()
-                    # Vérifiez si un bouton a été cliqué
-                    if 250 <= x <= 750 and 200 <= y <= 250:
-                        Game.jeu(self)  # Transition vers le jeu - A régler
-                    elif 250 <= x <= 750 and 300 <= y <= 350:
-                        self.jeu_lance = False  # Action du bouton "Quitter"
-                            
-                self.ecran.fill((255, 255, 255))  # Efface l'écran
-                
-                dessiner_bouton(250, 200, 500, 50, VERT, "Jouer", self.ecran)
-                dessiner_bouton(250, 300, 500, 50, ROUGE, "Quitter", self.ecran)
+# États du jeu
+ETAT_MENU = 0
+ETAT_JEU = 1
+etat = ETAT_MENU  # Commencez dans l'état du menu
 
-                pygame.display.flip()
-        
+# Fonction pour le menu principal
+def menu_principal():
+    en_cours = True
+    while en_cours:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                en_cours = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = pygame.mouse.get_pos()
+                # Vérifiez si un bouton a été cliqué
+                if 250 <= x <= 750 and 200 <= y <= 250:
+                    return ETAT_JEU  # Transition vers l'état du jeu
+                elif 250 <= x <= 750 and 300 <= y <= 350:
+                    en_cours = False  # Action du bouton "Quitter"
+
+        ecran.fill(BLANC)  # Efface l'écran
+
+        # Dessinez vos boutons dans l'état du menu
+        dessiner_bouton(250, 200, 500, 50, VERT, "Jouer")
+        dessiner_bouton(250, 300, 500, 50, ROUGE, "Quitter")
+
+        pygame.display.flip()
+
+# Fonction pour le jeu
+def jeu():
+    en_cours = True
+    while en_cours:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                en_cours = False
+
+        Game.ecran.fill(NOIR)  # Efface l'écran
+
+        # Ajoutez ici le code de votre jeu
+
+        pygame.display.flip()
+
+# Boucle principale
+while etat != None:
+    if etat == ETAT_MENU:
+        etat = menu_principal()
+    elif etat == ETAT_JEU:
+        jeu()
 
 if __name__ == "__main__":
     pygame.init()

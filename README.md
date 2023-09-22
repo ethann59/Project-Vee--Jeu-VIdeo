@@ -29,3 +29,4 @@ Le menu principal permet de lancer une partie rapide ou personnalisée. Il perme
 ## Credits & Licence
 
 Merci ChatGPT pour les bouts de code (lol)
+Merci ELUECQUE Anthony pour la correction d'un bug bien génant

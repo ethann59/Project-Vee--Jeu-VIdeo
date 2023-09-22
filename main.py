@@ -4,7 +4,6 @@ import time, sys, random
 # Importation des fichiers
 import players, ennemis, objects, settings
 import place_data, enemy_data, object_data
-#import enemy_object_data // C'est pour après le temps que je répare le progamme
 
 # Variables globales
 
@@ -14,6 +13,7 @@ version = "0.0.5"
 
 game_settings = settings.game_settings()
 duree_timer = game_settings.time_limit
+nb_joueurs = 0
 
 
 # Variables textuels
@@ -51,7 +51,6 @@ VERT = (0, 255, 0)
 ROUGE = (255, 0, 0)
 GRIS = (128, 128, 128)
 BLEU = (0, 0, 255)
-BLEU_FONCE = (0, 0, 128)
 
 # Fonction graphiques
 def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
@@ -64,14 +63,14 @@ def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
     
 # Fonctions de la partie
 
-def timer():
+def timer(): # A finir
     global duree_timer
     duree_timer -= 1
     timer_text = font.render("Temps restant : " + str(duree_timer), True, (55, 42, 60))
     if duree_timer == 0:
         print("Temps écoulé !")
 
-def dee():
+def dee(): # A finir
     resultat_dee = random.randint(1, 6)
     texte_dee = font.render("Vous avez fait un " + str(resultat_dee), True, (55, 42, 60))
     return texte_dee, resultat_dee
@@ -85,6 +84,7 @@ def police(player : players.Joueur):
 ETAT_MENU = 0
 ETAT_JEU = 1
 etat = ETAT_MENU  # Commencez dans l'état du menu
+
 
 # Fonction pour le menu principal
 def menu_principal():
@@ -167,7 +167,7 @@ def nom_joueurs(nb_joueurs):
         #Demander à ChatGPT de faire le truc
         pass
 
-def jeu():
+def jeu(nb_joueurs):
     en_cours = True
     while en_cours:
         for event in pygame.event.get():
@@ -182,70 +182,56 @@ def jeu():
         
         # Demande le nombre de joueurs
         
-        nb_joueurs = nombre_joueurs()
-        if nb_joueurs == 0:
-            fenetre.fill(BLEU_FONCE)  # Efface l'écran
-            fenetre.blit("Une erreur critique s'est produit : Le nombre de joueurs n'a pas été défini", (100, 100))
-            fenetre.blit("Le jeu va se fermer", (100, 200))
-            time.sleep(5)
-            pygame.quit()
-            sys.exit()
+        # nb_joueurs = nombre_joueurs()
         # Création des joueurs selon la classe et les paramètres du jeu - Vous pouvez passer à la suite
         # A voir comment raccourcir le code
         if nb_joueurs == 1:
             Joueur1 = players.Joueur()
             Joueur1.setNom("Joueur 1")
-            Joueur1.setProbapolice(game_settings.proba_police)
         if nb_joueurs == 2:
             Joueur1 = players.Joueur()
             Joueur1.setNom("Joueur 1")
-            Joueur1.setProbapolice(game_settings.proba_police)
             Joueur2 = players.Joueur()
             Joueur2.setNom("Joueur 2")
-            Joueur2.setProbapolice(game_settings.proba_police)
         if nb_joueurs == 3:
             Joueur1 = players.Joueur()
             Joueur1.setNom("Joueur 1")
-            Joueur1.setProbapolice(game_settings.proba_police)
             Joueur2 = players.Joueur()
             Joueur2.setNom("Joueur 2")
-            Joueur2.setProbapolice(game_settings.proba_police)
             Joueur3 = players.Joueur()
             Joueur3.setNom("Joueur 3")
-            Joueur3.setProbapolice(game_settings.proba_police)
         if nb_joueurs == 4:
             Joueur1 = players.Joueur()
             Joueur1.setNom("Joueur 1")
-            Joueur1.setProbapolice(game_settings.proba_police)
             Joueur2 = players.Joueur()
             Joueur2.setNom("Joueur 2")
-            Joueur3.setProbapolice(game_settings.proba_police)
             Joueur3 = players.Joueur()
             Joueur3.setNom("Joueur 3")
-            Joueur3.setProbapolice(game_settings.proba_police)
             Joueur4 = players.Joueur()
             Joueur4.setNom("Joueur 4")
-            Joueur4.setProbapolice(game_settings.proba_police)
         
         # Demande à chaque joueur d'écrire son nom
         
-        nom_joueurs(nb_joueurs)
+        #nom_joueurs(nb_joueurs)
         
 
         fenetre.fill((255, 255, 255))
         fenetre.blit(plateau_img, (0,0))
-        
         fenetre.blit(timer_text, (700, 0))
         
 
         pygame.display.flip()
 
 # Boucle principale
+etat = ETAT_MENU  # Commencez dans l'état du menu
+       
 while etat != None:
     if etat == ETAT_MENU:
-        etat = menu_principal()
+        etat=menu_principal()
     elif etat == ETAT_JEU:
-        jeu()
+        if nb_joueurs == 0:
+            nb_joueurs=nombre_joueurs()
+        etat=jeu(nb_joueurs)
 
 pygame.quit()
 sys.exit()

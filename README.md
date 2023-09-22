@@ -18,9 +18,12 @@ Pour installer le jeu, il suffit de télécharger le fichier .zip et de l'extrai
 
 ## Utilisation
 
+### Régles du jeu
+
+[A compléter]
 ### Menu principal
 
-[A Compléter]
+Le menu principal permet de lancer une partie rapide ou personnalisée. Il permet aussi de quitter le jeu.
 
 
 ## Credits & Licence

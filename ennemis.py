@@ -12,6 +12,8 @@ class Ennemi:
         self.quest_object = []
         self.final_boss = False
         self.arme = ["Simple pistolet"]
+        self.coords = [0,0] # Uniquement pour James et ses protégés // Si c'est à 0,0, il n'apparait pas
+        self.killed = False # Uniquement pour James et ses protégés // Si c'est True, il n'apparait plus
         
     def setNom(self : Ennemi, nom : str) :
         self.nom = nom
@@ -40,4 +42,7 @@ class Ennemi:
         
     def setFinalBoss(self : Ennemi, final_boss : bool) :
         self.final_boss = final_boss
+        
+    def setCooords(self : Ennemi, coords : list) :
+        self.coords = coords
         

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from objects import Object
+from settings import game_settings
 
 class Joueur():    
     def __init__(self):
@@ -13,6 +14,8 @@ class Joueur():
         self.arme = ["Simple pistolet"]
         self.Score = 0
         self.Timer = 0
+        self.case = 0
+        self.proba_police = 0.2
     
     def setNom(self : Joueur, nom : str) :
         self.nom = nom
@@ -44,4 +47,10 @@ class Joueur():
         
     def addPv(self : Joueur, pv : int) :
         self.pv += pv
+        
+    def setCase(self : Joueur, case : int) :
+        self.case = case
+        
+    def setProbapolice(self : Joueur, proba : int) :
+        self.proba_police = proba
         

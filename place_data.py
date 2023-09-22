@@ -1,4 +1,4 @@
-import game_settings as gc
+import settings as gc
 
 def hospital(): #Généré par Copilot - A modifier pour le rendre compatible avec le jeu
     # print("Vous êtes à l'hôpital")

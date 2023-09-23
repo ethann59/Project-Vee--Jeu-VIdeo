@@ -25,8 +25,8 @@ Pour installer le jeu, il suffit de télécharger le fichier .zip et de l'extrai
 
 Le menu principal permet de lancer une partie rapide ou personnalisée. Il permet aussi de quitter le jeu.
 
-
 ## Credits & Licence
 
 Merci ChatGPT pour les bouts de code (lol)
 Merci ELUECQUE Anthony pour la correction d'un bug bien génant
+Merci à The Skindex pour les skins des personnages

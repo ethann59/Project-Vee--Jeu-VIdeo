@@ -7,7 +7,7 @@ import place_data, enemy_data, object_data
 
 # Variables globales
 
-version = "0.0.5"
+version = "0.0.6"
 
 # Variables de la partie
 
@@ -22,7 +22,7 @@ pygame.font.init()
 font = pygame.font.Font(None, 36)  # Crée une police avec une taille de 36 points (vous pouvez ajuster la taille selon vos besoins)
 texte = font.render("Votre texte ici", True, (55, 42, 60))  # Texte blanc avec antialiasing
 timer_text = font.render("Temps restant : " + str(duree_timer), True, (55, 42, 60))
-
+inventaire_text = font.render("Inventaire :", True, (55, 42, 60))
 
 # Variables du plateau
 
@@ -32,9 +32,13 @@ n = 0 # Nombre de cases du plateau - A définir
 def inialize_plateau(n):
     for i in range(n):
         Plateau.append([n, ""])
+        
+# Variables graphiques
 
 plateau_img = pygame.image.load("img/scenes/plateau.jpg")
 plateau_img = pygame.transform.scale(plateau_img, (648, 644))
+
+inventaire_img = pygame.image.load("img/scenes/inventaire.png")
 
 # Initialisation de Pygame
 pygame.init()
@@ -63,22 +67,27 @@ def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
     
 # Fonctions de la partie
 
-def timer(): # A finir
+def timer():
     global duree_timer
     duree_timer -= 1
     timer_text = font.render("Temps restant : " + str(duree_timer), True, (55, 42, 60))
     if duree_timer == 0:
-        print("Temps écoulé !")
+        timer_text = font.render("Temps écoulé !", True, (55, 42, 60))
+    return timer_text
 
 def dee(): # A finir
+    # Il faudrait créer une attente sans pour autant que ce soit instantané ou faire crash le logiciel
     resultat_dee = random.randint(1, 6)
     texte_dee = font.render("Vous avez fait un " + str(resultat_dee), True, (55, 42, 60))
-    return texte_dee, resultat_dee
+    time.sleep(1)
+    return texte_dee
+    # Il faut afficher le résultat du dé
 
 def police(player : players.Joueur):
     proba_police = player.proba_police # A modifier plus tard pour les parties personnaliés
     # A finir
     pass
+
 
 # États du jeu
 ETAT_MENU = 0
@@ -187,28 +196,40 @@ def jeu(nb_joueurs):
         # A voir comment raccourcir le code
         if nb_joueurs == 1:
             Joueur1 = players.Joueur()
-            Joueur1.setNom("Joueur 1")
+            Joueur1.setNom("Dave")
+            Joueur1.setImage("img/sprites/human.png")
         if nb_joueurs == 2:
             Joueur1 = players.Joueur()
-            Joueur1.setNom("Joueur 1")
+            Joueur1.setNom("Dave")
+            Joueur1.setImage("img/sprites/dave-human.png")
             Joueur2 = players.Joueur()
-            Joueur2.setNom("Joueur 2")
+            Joueur2.setNom("Wendy")
+            Joueur2.setImage("img/sprites/wendy-squirrel.png")
         if nb_joueurs == 3:
             Joueur1 = players.Joueur()
-            Joueur1.setNom("Joueur 1")
+            Joueur1.setNom("Dave")
+            Joueur1.setImage("img/sprites/dave-human.png")
             Joueur2 = players.Joueur()
-            Joueur2.setNom("Joueur 2")
+            Joueur2.setNom("Wendy")
+            Joueur2.setImage("img/sprites/wendy-squirrel.png")
             Joueur3 = players.Joueur()
-            Joueur3.setNom("Joueur 3")
+            Joueur3.setNom("Bob")
+            Joueur3.setImage("img/sprites/bob-aquaman.png")
         if nb_joueurs == 4:
             Joueur1 = players.Joueur()
-            Joueur1.setNom("Joueur 1")
+            Joueur1.setNom("Dave")
+            Joueur1.setImage("img/sprites/dave-human.png")
             Joueur2 = players.Joueur()
-            Joueur2.setNom("Joueur 2")
+            Joueur2.setNom("Wendy")
+            Joueur2.setImage("img/sprites/wendy-squirrel.png")
             Joueur3 = players.Joueur()
-            Joueur3.setNom("Joueur 3")
+            Joueur3.setNom("Bob")
+            Joueur3.setImage("img/sprites/bob-aquaman.png")
             Joueur4 = players.Joueur()
-            Joueur4.setNom("Joueur 4")
+            Joueur4.setNom("Pi")
+            Joueur4.setImage("img/sprites/pi-robot.png")
+            
+        joueur_actif = Joueur1.nom # A changer selon le joueur
         
         # Demande à chaque joueur d'écrire son nom
         
@@ -217,7 +238,48 @@ def jeu(nb_joueurs):
 
         fenetre.fill((255, 255, 255))
         fenetre.blit(plateau_img, (0,0))
-        fenetre.blit(timer_text, (700, 0))
+        # Affichage du timer
+        temp_timer_text = font.render("Temps restant : X:XX", True, (55, 42, 60))
+        fenetre.blit(temp_timer_text, (700, 350))
+        #fenetre.blit(timer_txt=timer()), (700, 300)
+        # Affichage de l'inventaire
+        fenetre.blit(inventaire_text, (700, 100))
+        fenetre.blit(inventaire_img, (700, 150))
+        # Affichage du joueur
+        quelle_joueur = font.render(joueur_actif, True, (55, 42, 60)) # A changer selon le joueur
+        fenetre.blit(quelle_joueur, (700, 10))
+        # Affichage du dé - A corriger
+        #resultat_dee = random.randint(1, 6)
+        #texte_dee = dee()
+        temp_dee = font.render("Vous avez fait un X", True, (55, 42, 60))
+        fenetre.blit(temp_dee, (700, 400))
+        #fenetre.blit(texte_dee, (700, 350))
+        
+    # Affichage des joueurs
+        if nb_joueurs == 1:
+            fenetre.blit(Joueur1.image, (15, 15))
+        if nb_joueurs == 2:
+            fenetre.blit(Joueur1.image, (15, 15))
+            fenetre.blit(Joueur2.image, (80, 15))
+        if nb_joueurs == 3:
+            fenetre.blit(Joueur1.image, (15, 15))
+            fenetre.blit(Joueur2.image, (80, 15))
+            fenetre.blit(Joueur3.image, (15, 80))
+        if nb_joueurs == 4:
+            fenetre.blit(Joueur1.image, (15, 15))
+            fenetre.blit(Joueur2.image, (80, 15))
+            fenetre.blit(Joueur3.image, (15, 80))
+            fenetre.blit(Joueur4.image, (80, 80))
+            
+    # Affichage des ennemis
+            fenetre.blit(enemy_data.voleur.image, (210, 15))
+            fenetre.blit(enemy_data.delinquant.image, (145, 15))
+            fenetre.blit(enemy_data.ap_James1.image, (270, 15))
+            fenetre.blit(enemy_data.ap_James2.image, (15, 335))
+            fenetre.blit(enemy_data.ap_James3.image, (15, 145))
+            fenetre.blit(enemy_data.ap_James4.image, (15, 210))
+            fenetre.blit(enemy_data.james.image, (15, 400))
+    # Deplacement des joueurs
         
 
         pygame.display.flip()

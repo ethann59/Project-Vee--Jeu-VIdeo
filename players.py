@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from objects import Object
 from settings import game_settings
+import pygame
 
 class Joueur():    
     def __init__(self):
@@ -16,6 +17,7 @@ class Joueur():
         self.Timer = 0
         self.case = 0
         self.proba_police = 0.2
+        self.image = None
     
     def setNom(self : Joueur, nom : str) :
         self.nom = nom
@@ -53,4 +55,8 @@ class Joueur():
         
     def setProbapolice(self : Joueur, proba : int) :
         self.proba_police = proba
+        
+    def setImage(self : Joueur, image : str) :
+        self.image = pygame.image.load(image)
+        self.image = pygame.transform.scale(self.image, (36, 36))
         

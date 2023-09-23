@@ -1,5 +1,7 @@
 import settings as gc
 
+case_dico= {0 : (0,0), 1 : () } # A finir
+
 def hospital(): #Généré par Copilot - A modifier pour le rendre compatible avec le jeu
     # print("Vous êtes à l'hôpital")
     # print("Vous pouvez vous soigner pour 10 golds")

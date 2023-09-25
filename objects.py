@@ -1,30 +1,62 @@
 from __future__ import annotations
 
-class Object: #On va définir les objets (armes, armures, potions, etc...) Voir si il y a pas une autre méthode pour stocker les informations
+class GenericObject: #On va définir les objets (armes, armures, potions, etc...)
     def __init__(self):
         self.nom = ""
-        self.pam = 0 # Si l'objet est une armure, il aura des points d'armure
-        self.pam_temp = False # Si l'objet est un champ de force, il permet d'indiquer au jeu si les points sont temporaires ou non
-        self.patt = 0 # Si l'objet est une arme, il aura des points d'attaque
-        self.pv = 0 # Si l'objet est une potion, il aura des points de vie (ça sera soit un pourçentage soit un nombre fixe)
-        self.police_proba = 0 # Si l'objet est une arme, il aura une probabilité de faire apparaître la police (ça sera un chiffre entre 0 et 1)
-        self.fuite_proba = 0 # Si l'objet est une grenade flash, il aura une probabilité de faire fuir l'ennemi (ça sera un chiffre entre 0 et 1)
-    
-    def setNom(self : Object, nom : str) :
+        self.prix = 0
+        self.description = ""
+        
+    def setNom(self : GenericObject, nom : str) :
         self.nom = nom
         
-    def setPam(self : Object, pam : int) :
-        self.pam = pam
+    def setPrix(self : GenericObject, prix : int) :
+        self.prix = prix
+    
+    def setDescription(self : GenericObject, description : str) :
+        self.description = description
         
-    def setPatt(self : Object, patt : int) :
-        self.patt = patt
+class Arme(GenericObject):
+    def __init__(self):
+        super().__init__()
+        self.patt = 0
+        self.Police_Proba = 0 # Probabilité de tomber sur la police à cause de cette arme
+        #self.critique = 0 #Une idée de Copilot on pourrait le garder pour le système de combat
         
-    def setPv(self : Object, pv : int) :
+    def setDegats(self : Arme, degats : int) :
+        self.degats = degats
+        
+    def setPoliceProba(self : Arme, Police_Proba : int) :
+        self.Police_Proba = Police_Proba
+        
+    #def setCritique(self : Arme, critique : int) :
+    #    self.critique = critique
+    
+class Armure(GenericObject):
+    def __init__(self):
+        super().__init__()
+        self.pam = 0
+        
+    def setDefense(self : Armure, defense : int) :
+        self.pam = defense
+        
+class Potion(GenericObject):
+    def __init__(self):
+        super().__init__()
+        self.pv = 0
+        
+    def setPV(self : Potion, pv : int) :
         self.pv = pv
-    
-    def setPoliceProba(self : Object, police_proba : float) :
-        self.police_proba = police_proba
-    
-    def setFuiteProba(self : Object, fuite_proba : float) :
-        self.fuite_proba = fuite_proba
         
+class TempShield(GenericObject):
+    def __init__(self):
+        super().__init__()
+        self.pdef = 0
+        self.duree = 0
+        
+    def setDefense(self : TempShield, defense : int) :
+        self.defense = defense
+        
+    def setDuree(self : TempShield, duree : int) :
+        self.duree = duree
+        
+# Peut etre faire une classe pour les objets de quête

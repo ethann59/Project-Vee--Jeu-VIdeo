@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from objects import Object
+from objects import *
 from settings import game_settings
 import pygame
 
@@ -9,6 +9,7 @@ class Joueur():
         self.nom = "Joueur"
         self.pv = 100
         self.pam = 0
+        self.pam_temp_duree = 0
         self.patt = 10
         self.gold = 0
         self.inventaire = []
@@ -41,10 +42,10 @@ class Joueur():
     def addTimer(self : Joueur, timer : int) :
         self.Timer += timer
         
-    def addObjet(self : Joueur, objet : Object) :
+    def addObjet(self : Joueur, objet : GenericObject) :
         self.inventaire.append(objet)
         
-    def delObjet(self : Joueur, objet : Object) :
+    def delObjet(self : Joueur, objet : GenericObject) :
         self.inventaire.remove(objet)
         
     def addPv(self : Joueur, pv : int) :

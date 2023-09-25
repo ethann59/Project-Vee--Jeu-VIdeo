@@ -1,11 +1,10 @@
 #On stockera les ennemis ce fichier
 
 import settings as gc
-import objects as objs
-
+from objects import *
 object_list = []
 
-objs.ItemTest = objs.Object()
+GenericObject.ItemTest = GenericObject()
 
 
 

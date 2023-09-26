@@ -48,7 +48,7 @@ class EnnemiImportant(Ennemi): # Uniquement pour James et ses protégés
         super().__init__()
         self.quest_object = []
         self.final_boss = False
-        self.coords = [0,0] # Si c'est à 0,0, il n'apparait pas
+        self.case = 0
         self.killed = False # Si c'est True, il n'apparait plus
         self.spawn_taux = None # Si c'est None, il n'apparait pas aléatoirement
         
@@ -58,8 +58,9 @@ class EnnemiImportant(Ennemi): # Uniquement pour James et ses protégés
     def setFinalBoss(self : EnnemiImportant, final_boss : bool) :
         self.final_boss = final_boss
     
-    def setCooords(self : EnnemiImportant, coords : list) :
-        self.coords = coords
+    def setCase(self : EnnemiImportant, case : int) :
+        self.case = case
+
     
     def setKilled(self : EnnemiImportant, killed : bool) :
         self.killed = killed

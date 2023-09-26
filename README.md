@@ -10,7 +10,8 @@ Dans le cadre de ce projet, les parties rapides sont limités à 15 minutes. Le 
 
 ### Prérequis
 
-Pour pouvoir lancer le jeu, il faut avoir installé Python 4.11 ou plus. Il faut aussi avoir installé la librairie Pygame.
+Pour pouvoir lancer le jeu, il faut avoir installé Python 3.11 ou plus. Il faut aussi avoir installé la librairie Pygame.
+Vous pouvez tenter en dessous mais je n'ai pas testé.
 
 ### Installation du jeu
 
@@ -27,6 +28,14 @@ Le menu principal permet de lancer une partie rapide ou personnalisée. Il perme
 
 ## Credits & Licence
 
-Merci ChatGPT pour les bouts de code (lol)
-Merci ELUECQUE Anthony pour la correction d'un bug bien génant
+Merci ELUECQUE Anthony et DUVET Alexandre pour l'aide au codage
 Merci à The Skindex pour les skins des personnages
+
+## Patch notes
+
+[A voir si je supprime ça à la fin]
+### Patch 0.0.7 R2
+
+Finalisation du référencement des cases, mise en place d'un placement aléatoire des ennemis importants.
+Début de codage d'un système de déplacement.
+Nettoyage du code.

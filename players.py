@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from objects import *
 from settings import game_settings
+from place_data import plateau_info
 import pygame
 
 class Joueur():    
@@ -23,9 +24,10 @@ class Joueur():
     def setNom(self : Joueur, nom : str) :
         self.nom = nom
         
-    def setArme(self : Joueur, arme : str, patt : int) :
+    def setArme(self : Joueur, arme : str, patt : int, proba : int) :
         self.arme = arme
         self.patt = patt
+        self.proba_police = proba
         
     def setPam(self : Joueur, pam : int) :
         self.pam = pam
@@ -53,6 +55,14 @@ class Joueur():
         
     def setCase(self : Joueur, case : int) :
         self.case = case
+    
+    def addCase(self : Joueur, case : int, plateau : dict) :
+        if self.case + case > 26 :
+            self.case = self.case + case - 26
+            self.addGold(200)
+        else :
+            self.case += case
+
         
     def setProbapolice(self : Joueur, proba : int) :
         self.proba_police = proba

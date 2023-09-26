@@ -22,7 +22,7 @@ class game_settings:
         self.hospital_price = 10 # Permet de changer le prix de l'hopital
         self.time_limit = (10 * 60) # Permet de changer le temps limite de la partie (en minutes), si elle est à 0, la partie n'est pas limité dans le temps
     
-    
+
 # Partie réservé au calcul des scores. Elle sont basés sur les points de vie restants, l'or mais aussi les ennemis tués, les items de quetes ramassés, etc...
 
 # Je devrais pas faire un dictionnaire ?

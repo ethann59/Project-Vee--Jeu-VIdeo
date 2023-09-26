@@ -2,17 +2,20 @@
 import pygame.font
 import time, sys, random
 # Importation des fichiers
-import players, ennemis, objects, settings
-import place_data, enemy_data, object_data
+import players, ennemis, objects
+from settings import *
+from place_data import *
+from enemy_data import *
+from object_data import *
 
 # Variables globales
 
 version = "0.0.7"
 
 # Variables de la partie
-
-game_settings = settings.game_settings()
-duree_timer = game_settings.time_limit
+global settings
+settings = game_settings()
+duree_timer = settings.time_limit
 nb_joueurs = 0
 
 
@@ -23,12 +26,7 @@ font = pygame.font.Font(None, 36)  # Crée une police avec une taille de 36 poin
 texte = font.render("Votre texte ici", True, (55, 42, 60))  # Texte blanc avec antialiasing
 timer_text = font.render("Temps restant : " + str(duree_timer), True, (55, 42, 60))
 inventaire_text = font.render("Inventaire :", True, (55, 42, 60))
-
-# Variables du plateau
-
-#plateau_character_info = [(1, []), (2, []), (3, []), (4, []), (5, []), (6, []), (7, []), (8, []), (9, []), (10, []), (11, []), (12, []), (13, []), (14, []), (15, []), (16, []), (17, []), (18, []), (19, []), (20, []), (21, []), (22, []), (23, []), (24, []), (25, [])]
-#A voir comment gérer les données du plateau pour les joueurs car ça me prends un peu la tête
-        
+    
 # Variables graphiques
 
 plateau_img = pygame.image.load("img/scenes/plateau.jpg")
@@ -54,6 +52,18 @@ BLEU = (0, 0, 255)
 
 # Fonction graphiques
 def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
+    """
+    Dessine un bouton rectangulaire à l'écran avec un texte au centre.
+
+    Args:
+        x (int): La position x du coin supérieur gauche du bouton.
+        y (int): La position y du coin supérieur gauche du bouton.
+        largeur (int): La largeur du bouton.
+        hauteur (int): La hauteur du bouton.
+        couleur (tuple): La couleur du bouton au format RGB.
+        texte (str): Le texte à afficher au centre du bouton.
+        action (function, optional): La fonction à exécuter lorsque le bouton est cliqué. Defaults to None.
+    """
     pygame.draw.rect(fenetre, couleur, (x, y, largeur, hauteur))
     font = pygame.font.Font(None, 36)
     texte_surface = font.render(texte, True, NOIR)
@@ -64,6 +74,9 @@ def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
 # Fonctions de la partie
 
 def timer():
+    """
+    Gére le timer du jeu
+    """
     global duree_timer
     duree_timer -= 1
     timer_text = font.render("Temps restant : " + str(duree_timer), True, (55, 42, 60))
@@ -71,13 +84,12 @@ def timer():
         timer_text = font.render("Temps écoulé !", True, (55, 42, 60))
     return timer_text
 
-def dee(): # A finir
+def dee():
     # Il faudrait créer une attente sans pour autant que ce soit instantané ou faire crash le logiciel
     resultat_dee = random.randint(1, 6)
     texte_dee = font.render("Vous avez fait un " + str(resultat_dee), True, (55, 42, 60))
     #time.sleep(1)
-    return texte_dee
-    # Il faut afficher le résultat du dé
+    return texte_dee, resultat_dee
 
 def police(player : players.Joueur):
     proba_police = player.proba_police # A modifier plus tard pour les parties personnaliés
@@ -93,6 +105,11 @@ etat = ETAT_MENU  # Commencez dans l'état du menu
 
 # Fonction pour le menu principal
 def menu_principal():
+    """Gére le menu principal du jeu
+
+    Returns:
+        None
+    """
     en_cours = True
     while en_cours:
         for event in pygame.event.get():
@@ -127,6 +144,12 @@ def menu_principal():
 # Définir une fonction qui demande le nombre de joueurs au joueur
 
 def nombre_joueurs():
+    """
+    Demande le nombre de joueurs et renvoie le nombre sélectionné pour le programme "jeu()".
+
+    Returns:
+        int: Le nombre de joueurs sélectionné (1, 2, 3 ou 4).
+    """
     fenetre.fill(BLANC)  # Efface l'écran
     
     # Demande le nombre de joueurs
@@ -165,7 +188,7 @@ def nombre_joueurs():
 
         pygame.display.flip()
         
-def nom_joueurs(nb_joueurs): # A tester
+def nom_joueurs(nb_joueurs): # Ça marche mais il attribue pas les noms aux joueurs
     noms = []  # Une liste pour stocker les noms des joueurs
     
     for i in range(1, nb_joueurs + 1):
@@ -202,8 +225,88 @@ def nom_joueurs(nb_joueurs): # A tester
     
     return noms
 
+def ennemi_random_place():
+    '''Cette fonction permet de placer les ennemis important aléatoirement sur le plateau. Ils ont le droit d'aller partout sauf sur les emplacements importants'''
+    liste_case_ennemi = []
+    for i in range(0, 5):
+        random_case = random.randint(1, 26)
+        if random_case != 0 and random_case != 7 and random_case != 13 and random_case != 20 and random_case not in liste_case_ennemi:
+            liste_case_ennemi.append(random_case)
+        else:
+            while random_case == 0 or random_case == 7 or random_case == 13 or random_case == 20 or random_case in liste_case_ennemi:
+                random_case = random.randint(1, 26)
+            liste_case_ennemi.append(random_case)
+    # Affectation des ennemis
+    ap_James1.case = liste_case_ennemi[0]
+    ap_James2.case = liste_case_ennemi[1]
+    ap_James3.case = liste_case_ennemi[2]
+    ap_James4.case = liste_case_ennemi[3]
+    james.case = liste_case_ennemi[4]
+    
+    return ap_James1.case, ap_James2.case, ap_James3.case, ap_James4.case, james.case
+    
+
 
 def jeu(nb_joueurs):
+    """La fonction qui gère le jeu en lui-même."""
+    # Création des joueurs selon la classe et les paramètres du jeu
+    # A voir comment raccourcir le code
+        
+    list_players : list[players.Joueur]= []
+    if nb_joueurs == 1:
+        Joueur1 = players.Joueur()
+        Joueur1.setNom("Dave")
+        Joueur1.setNom(list_playername[0])
+        Joueur1.setImage("img/sprites/dave-human.png")
+        list_players.append(Joueur1)
+    if nb_joueurs == 2:
+        Joueur1 = players.Joueur()
+        Joueur1.setNom("Dave")
+        Joueur1.setNom(list_playername[0])
+        Joueur1.setImage("img/sprites/dave-human.png")
+        Joueur2 = players.Joueur()
+        Joueur2.setNom("Wendy")
+        Joueur2.setNom(list_playername[1])
+        Joueur2.setImage("img/sprites/wendy-squirrel.png")
+        list_players.append(Joueur1)
+        list_players.append(Joueur2)
+    if nb_joueurs == 3:
+        Joueur1 = players.Joueur()
+        Joueur1.setNom("Dave")
+        Joueur1.setNom(list_playername[0])
+        Joueur1.setImage("img/sprites/dave-human.png")
+        Joueur2 = players.Joueur()
+        Joueur2.setNom("Wendy")
+        Joueur2.setNom(list_playername[1])
+        Joueur2.setImage("img/sprites/wendy-squirrel.png")
+        Joueur3 = players.Joueur()
+        Joueur3.setNom("Bob")
+        Joueur3.setNom(list_playername[2])
+        Joueur3.setImage("img/sprites/bob-aquaman.png")
+        list_players.append(Joueur1)
+        list_players.append(Joueur2)
+        list_players.append(Joueur3)
+    if nb_joueurs == 4:
+        Joueur1 = players.Joueur()
+        Joueur1.setNom(list_playername[0])
+        Joueur1.setImage("img/sprites/dave-human.png")
+        Joueur2 = players.Joueur()
+        Joueur2.setNom(list_playername[1])
+        Joueur2.setImage("img/sprites/wendy-squirrel.png")
+        Joueur3 = players.Joueur()
+        Joueur3.setNom(list_playername[2])
+        Joueur3.setImage("img/sprites/bob-aquaman.png")
+        Joueur4 = players.Joueur()
+        Joueur4.setNom(list_playername[3])
+        Joueur4.setImage("img/sprites/pi-robot.png")
+        list_players.append(Joueur1)
+        list_players.append(Joueur2)
+        list_players.append(Joueur3)
+        list_players.append(Joueur4)
+    
+    joueur_actif = list_players[0] # A changer selon le joueur
+        
+    # Jeu en lui-même
     en_cours = True
     while en_cours:
         for event in pygame.event.get():
@@ -211,73 +314,6 @@ def jeu(nb_joueurs):
                 en_cours = False
 
         fenetre.fill(BLANC)  # Efface l'écran
-        
-        # Récupération des paramètres de la partie
-        
-        game_settings = settings.game_settings()
-        
-        # Demande le nombre de joueurs
-        
-        # Création des joueurs selon la classe et les paramètres du jeu - Vous pouvez passer à la suite
-        # A voir comment raccourcir le code
-        
-        list_players : list[players.Joueur]= []
-        if nb_joueurs == 1:
-            Joueur1 = players.Joueur()
-            Joueur1.setNom("Dave")
-            #Joueur1.setNom(list_playername[0])
-            Joueur1.setImage("img/sprites/dave-human.png")
-            list_players.append(Joueur1)
-        if nb_joueurs == 2:
-            Joueur1 = players.Joueur()
-            Joueur1.setNom("Dave")
-            #Jooueur1.setNom(list_playername[0])
-            Joueur1.setImage("img/sprites/dave-human.png")
-            Joueur2 = players.Joueur()
-            Joueur2.setNom("Wendy")
-            #Joueur2.setNom(list_playername[1])
-            Joueur2.setImage("img/sprites/wendy-squirrel.png")
-            list_players.append(Joueur1)
-            list_players.append(Joueur2)
-        if nb_joueurs == 3:
-            Joueur1 = players.Joueur()
-            Joueur1.setNom("Dave")
-            #Joueur1.setNom(list_playername[0])
-            Joueur1.setImage("img/sprites/dave-human.png")
-            Joueur2 = players.Joueur()
-            Joueur2.setNom("Wendy")
-            #Joueur2.setNom(list_playername[1])
-            Joueur2.setImage("img/sprites/wendy-squirrel.png")
-            Joueur3 = players.Joueur()
-            Joueur3.setNom("Bob")
-            #Joueur3.setNom(list_playername[2])
-            Joueur3.setImage("img/sprites/bob-aquaman.png")
-            list_players.append(Joueur1)
-            list_players.append(Joueur2)
-            list_players.append(Joueur3)
-        if nb_joueurs == 4:
-            Joueur1 = players.Joueur()
-            Joueur1.setNom("Dave")
-            #Joueur1.setNom(list_playername[0])
-            Joueur1.setImage("img/sprites/dave-human.png")
-            Joueur2 = players.Joueur()
-            Joueur2.setNom("Wendy")
-            #Joueur2.setNom(list_playername[1])
-            Joueur2.setImage("img/sprites/wendy-squirrel.png")
-            Joueur3 = players.Joueur()
-            Joueur3.setNom("Bob")
-            #Joueur3.setNom(list_playername[2])
-            Joueur3.setImage("img/sprites/bob-aquaman.png")
-            Joueur4 = players.Joueur()
-            Joueur4.setNom("Pi")
-            #Joueur4.setNom(list_playername[3])
-            Joueur4.setImage("img/sprites/pi-robot.png")
-            list_players.append(Joueur1)
-            list_players.append(Joueur2)
-            list_players.append(Joueur3)
-            list_players.append(Joueur4)
-        
-        joueur_actif = Joueur1.nom # A changer selon le joueur
 
         fenetre.fill((255, 255, 255))
         fenetre.blit(plateau_img, (0,0))
@@ -289,8 +325,10 @@ def jeu(nb_joueurs):
         fenetre.blit(inventaire_text, (700, 100))
         fenetre.blit(inventaire_img, (700, 150))
         # Affichage du joueur
-        quelle_joueur = font.render(joueur_actif, True, (55, 42, 60)) # A changer selon le joueur
+        quelle_joueur = font.render(joueur_actif.nom, True, (55, 42, 60))
+        argent_joueur = font.render("Or : " + str(joueur_actif.gold), True, (55, 42, 60))
         fenetre.blit(quelle_joueur, (700, 10))
+        fenetre.blit(argent_joueur, (700, 50))
         
     # Affichage des joueurs
         if nb_joueurs == 1:
@@ -308,24 +346,30 @@ def jeu(nb_joueurs):
             fenetre.blit(Joueur3.image, (15, 80))
             fenetre.blit(Joueur4.image, (80, 80))
             
-    # Affichage des ennemis
-            fenetre.blit(enemy_data.voleur.image, (210, 15))
-            fenetre.blit(enemy_data.delinquant.image, (145, 15))
-            fenetre.blit(enemy_data.ap_James1.image, (270, 15)) #Je le mets comme ça temporairement pour quand il faudra présenter
-            #fenetre.blit(enemy_data.ap_James1.image, (335, 15)) Pour la définition des coordonnées
-            fenetre.blit(enemy_data.ap_James2.image, (15, 335))
-            fenetre.blit(enemy_data.ap_James3.image, (15, 145))
-            fenetre.blit(enemy_data.ap_James4.image, (15, 210))
-            fenetre.blit(enemy_data.james.image, (15, 400))
+    # Affichage des ennemis importants
+        fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"]))
+        fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
+        fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
+        fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
+        # fenetre.blit(james.image, (15, 400))
             
     # Deplacement des joueurs
         # Affichage du dé - A corriger
-        #resultat_dee = random.randint(1, 6)
-        #texte_dee = dee()
-        temp_dee = font.render("Vous avez fait un X", True, (55, 42, 60))
-        fenetre.blit(temp_dee, (700, 400))
-        #fenetre.blit(texte_dee, (700, 350))
-
+        texte_dee, resultat_dee = dee()
+        #temp_dee = font.render("Vous avez fait un X", True, (55, 42, 60))
+        #fenetre.blit(temp_dee, (700, 400))
+        fenetre.blit(texte_dee, (700, 400))
+        position_joueur = font.render("Position : " + str(joueur_actif.case), True, (55, 42, 60))
+        fenetre.blit(position_joueur, (700, 450))
+        
+        # Deplacer le personnage
+        joueur_actif.addCase(resultat_dee, plateau_info)
+        fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
+        
+        # Gérer le changement de joueur en fonction du nombre de joueurs  
+        
+        if nb_joueurs > 0:
+            joueur_actif = list_players[(list_players.index(joueur_actif) + 1) % nb_joueurs]
 
         pygame.display.flip()
 
@@ -338,9 +382,10 @@ while etat != None:
     elif etat == ETAT_JEU:
         if nb_joueurs == 0:
             nb_joueurs=nombre_joueurs()
-            #global list_playername=nom_joueurs(nb_joueurs)
+            global list_playername
+            list_playername=nom_joueurs(nb_joueurs)
+            ennemi_random_place()
         etat=jeu(nb_joueurs)
-        #etat=jeu(nb_joueurs, list_playername)
 
 pygame.quit()
 sys.exit()

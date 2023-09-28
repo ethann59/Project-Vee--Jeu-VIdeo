@@ -39,3 +39,7 @@ Merci à The Skindex pour les skins des personnages
 Finalisation du référencement des cases, mise en place d'un placement aléatoire des ennemis importants.
 Début de codage d'un système de déplacement.
 Nettoyage du code.
+
+### Patch 0.0.7 R3
+
+Système de déplacement fini. Il reste plus que réparer le bug avec les gros cases et l'affichage des dés.

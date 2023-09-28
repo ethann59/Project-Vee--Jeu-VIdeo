@@ -247,7 +247,7 @@ def ennemi_random_place():
     
 
 
-def jeu(nb_joueurs):
+def jeu(nb_joueurs, list_playername):
     """La fonction qui gère le jeu en lui-même."""
     # Création des joueurs selon la classe et les paramètres du jeu
     # A voir comment raccourcir le code
@@ -259,6 +259,7 @@ def jeu(nb_joueurs):
         Joueur1.setNom(list_playername[0])
         Joueur1.setImage("img/sprites/dave-human.png")
         list_players.append(Joueur1)
+        fenetre.blit(Joueur1.image, (15, 15))
     if nb_joueurs == 2:
         Joueur1 = players.Joueur()
         Joueur1.setNom("Dave")
@@ -270,6 +271,8 @@ def jeu(nb_joueurs):
         Joueur2.setImage("img/sprites/wendy-squirrel.png")
         list_players.append(Joueur1)
         list_players.append(Joueur2)
+        fenetre.blit(Joueur1.image, (15, 15))
+        fenetre.blit(Joueur2.image, (80, 15))
     if nb_joueurs == 3:
         Joueur1 = players.Joueur()
         Joueur1.setNom("Dave")
@@ -286,6 +289,9 @@ def jeu(nb_joueurs):
         list_players.append(Joueur1)
         list_players.append(Joueur2)
         list_players.append(Joueur3)
+        fenetre.blit(Joueur1.image, (15, 15))
+        fenetre.blit(Joueur2.image, (80, 15))
+        fenetre.blit(Joueur3.image, (15, 80))
     if nb_joueurs == 4:
         Joueur1 = players.Joueur()
         Joueur1.setNom(list_playername[0])
@@ -298,25 +304,49 @@ def jeu(nb_joueurs):
         Joueur3.setImage("img/sprites/bob-aquaman.png")
         Joueur4 = players.Joueur()
         Joueur4.setNom(list_playername[3])
-        Joueur4.setImage("img/sprites/pi-robot.png")
+        Joueur4.setImage("img/sprites/plagiat-murder-drones-lol.png")
         list_players.append(Joueur1)
         list_players.append(Joueur2)
         list_players.append(Joueur3)
         list_players.append(Joueur4)
+        fenetre.blit(Joueur1.image, (15, 15))
+        fenetre.blit(Joueur2.image, (80, 15))
+        fenetre.blit(Joueur3.image, (15, 80))
+        fenetre.blit(Joueur4.image, (80, 80))
     
     joueur_actif = list_players[0] # A changer selon le joueur
-        
+    
+    # Micro tuto
+    tuto = font.render("Lancer le dé : [Espace]", True, (55, 42, 60)) # Voir comment le faire apparaitre que une fois
+    #first_tour = True
+    
+    fenetre.blit(tuto, (700, 450))
+    
     # Jeu en lui-même
     en_cours = True
     while en_cours:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 en_cours = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:  # Touche Espace pour lancer le dé
+                    texte_dee, resultat_dee = dee()
+                    fenetre.blit(texte_dee, (700, 400)) # Je sais pas pourquoi mais ça marche pas
+
+                    # Déplacer le personnage
+                    joueur_actif.addCase(resultat_dee, plateau_info)
+                    fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
+
+                    # Gérer le changement de joueur en fonction du nombre de joueurs  
+                    if nb_joueurs > 0:
+                        joueur_actif = list_players[(list_players.index(joueur_actif) + 1) % nb_joueurs]
+
 
         fenetre.fill(BLANC)  # Efface l'écran
 
         fenetre.fill((255, 255, 255))
         fenetre.blit(plateau_img, (0,0))
+        fenetre.blit(tuto, (700, 450))
         # Affichage du timer
         temp_timer_text = font.render("Temps restant : X:XX", True, (55, 42, 60))
         fenetre.blit(temp_timer_text, (700, 350))
@@ -330,7 +360,15 @@ def jeu(nb_joueurs):
         fenetre.blit(quelle_joueur, (700, 10))
         fenetre.blit(argent_joueur, (700, 50))
         
-    # Affichage des joueurs
+    
+        # Affichage des ennemis importants
+        fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"]))
+        fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
+        fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
+        fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
+        # fenetre.blit(james.image, (15, 400))
+        
+        # Affichage des joueurs
         if nb_joueurs == 1:
             fenetre.blit(Joueur1.image, (15, 15))
         if nb_joueurs == 2:
@@ -345,31 +383,30 @@ def jeu(nb_joueurs):
             fenetre.blit(Joueur2.image, (80, 15))
             fenetre.blit(Joueur3.image, (15, 80))
             fenetre.blit(Joueur4.image, (80, 80))
-            
-    # Affichage des ennemis importants
+        
+        
+        # Normalement ça permet de actualiser le plateau
+        fenetre.blit(plateau_img, (0,0))
+        fenetre.blit(texte_dee, (700, 450))
+        # Affichage des ennemis importants
         fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"]))
         fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
         fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
         fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
-        # fenetre.blit(james.image, (15, 400))
-            
-    # Deplacement des joueurs
-        # Affichage du dé - A corriger
-        texte_dee, resultat_dee = dee()
-        #temp_dee = font.render("Vous avez fait un X", True, (55, 42, 60))
-        #fenetre.blit(temp_dee, (700, 400))
-        fenetre.blit(texte_dee, (700, 400))
-        position_joueur = font.render("Position : " + str(joueur_actif.case), True, (55, 42, 60))
-        fenetre.blit(position_joueur, (700, 450))
-        
-        # Deplacer le personnage
-        joueur_actif.addCase(resultat_dee, plateau_info)
-        fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
-        
-        # Gérer le changement de joueur en fonction du nombre de joueurs  
-        
-        if nb_joueurs > 0:
-            joueur_actif = list_players[(list_players.index(joueur_actif) + 1) % nb_joueurs]
+        if nb_joueurs == 1:
+            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
+        if nb_joueurs == 2:
+            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
+            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
+        if nb_joueurs == 3:
+            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
+            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
+            fenetre.blit(Joueur3.image, (plateau_info[Joueur3.case]["x"], plateau_info[Joueur3.case]["y"]))
+        if nb_joueurs == 4:
+            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
+            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
+            fenetre.blit(Joueur3.image, (plateau_info[Joueur3.case]["x"], plateau_info[Joueur3.case]["y"]))
+            fenetre.blit(Joueur4.image, (plateau_info[Joueur4.case]["x"], plateau_info[Joueur4.case]["y"]))
 
         pygame.display.flip()
 
@@ -382,10 +419,9 @@ while etat != None:
     elif etat == ETAT_JEU:
         if nb_joueurs == 0:
             nb_joueurs=nombre_joueurs()
-            global list_playername
             list_playername=nom_joueurs(nb_joueurs)
             ennemi_random_place()
-        etat=jeu(nb_joueurs)
+        etat=jeu(nb_joueurs, list_playername)
 
 pygame.quit()
 sys.exit()

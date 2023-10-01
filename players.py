@@ -17,7 +17,8 @@ class Joueur():
         self.arme = ["Simple pistolet"]
         self.Score = 0
         self.Timer = 0
-        self.case = 0
+        self.case = 0 # refaire le système pour prendre en compte les chevauchements // Ou juste modifier un peu l’affichage
+        self.coords = plateau_info[self.case]["x"], plateau_info[self.case]["y"] # Le but ici est de pouvoir modifier les coordonnées en fonction de la case et des joueurs dessus
         self.proba_police = 0.2
         self.image = None
     
@@ -53,15 +54,27 @@ class Joueur():
     def addPv(self : Joueur, pv : int) :
         self.pv += pv
         
-    def setCase(self : Joueur, case : int) :
+    # Il faudra prendre en charge les gros cases ainsi que si il y a plus de 2 joueurs sur la même case + A corriger
+        
+    def setCase(self : Joueur, case : int, plateau : dict) :
+        if self in plateau[self.case]["joueurs"] :
+            plateau[self.case]["joueurs"].remove(self)
+        plateau[case]["joueurs"].append(self)
         self.case = case
+        if len(plateau_info[self.case]["joueurs"]) > 0 : # Si il y a déjà un joueur sur la case, on décale le joueur de 10 pixels vers le bas
+            self.coords = plateau_info[self.case]["x"], plateau_info[self.case]["y"] + 10
     
     def addCase(self : Joueur, case : int, plateau : dict) :
+        if self in plateau[self.case]["joueurs"] :
+            plateau[self.case]["joueurs"].remove(self)
+        plateau[case]["joueurs"].append(self)
         if self.case + case > 26 :
             self.case = self.case + case - 26
-            self.addGold(200)
+            self.addGold(100)
         else :
             self.case += case
+        if len(plateau_info[self.case]["joueurs"]) > 0 : # Si il y a déjà un joueur sur la case, on décale le joueur de 10 pixels vers le bas
+            self.coords = plateau_info[self.case]["x"], plateau_info[self.case]["y"] + 10
 
         
     def setProbapolice(self : Joueur, proba : int) :

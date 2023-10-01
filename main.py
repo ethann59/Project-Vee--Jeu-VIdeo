@@ -10,7 +10,7 @@ from object_data import *
 
 # Variables globales
 
-version = "0.0.7"
+version = "0.0.8"
 
 # Variables de la partie
 global settings
@@ -368,7 +368,10 @@ def jeu(nb_joueurs, list_playername):
         fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
         # fenetre.blit(james.image, (15, 400))
         
+        
+        
         # Affichage des joueurs
+        # refaire le système pour prendre en compte les chevauchements // Ou juste modifier un peu l’affichage
         if nb_joueurs == 1:
             fenetre.blit(Joueur1.image, (15, 15))
         if nb_joueurs == 2:
@@ -387,26 +390,26 @@ def jeu(nb_joueurs, list_playername):
         
         # Normalement ça permet de actualiser le plateau
         fenetre.blit(plateau_img, (0,0))
-        fenetre.blit(texte_dee, (700, 450))
+        #fenetre.blit(texte_dee, (700, 450))
         # Affichage des ennemis importants
         fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"]))
         fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
         fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
         fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
         if nb_joueurs == 1:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
+            fenetre.blit(Joueur1.image, (Joueur1.coords))
         if nb_joueurs == 2:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
-            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
+            fenetre.blit(Joueur1.image, (Joueur1.coords))
+            fenetre.blit(Joueur2.image, (Joueur2.coords))
         if nb_joueurs == 3:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
-            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
-            fenetre.blit(Joueur3.image, (plateau_info[Joueur3.case]["x"], plateau_info[Joueur3.case]["y"]))
+            fenetre.blit(Joueur1.image, (Joueur1.coords))
+            fenetre.blit(Joueur2.image, (Joueur2.coords))
+            fenetre.blit(Joueur3.image, (Joueur3.coords))
         if nb_joueurs == 4:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
-            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
-            fenetre.blit(Joueur3.image, (plateau_info[Joueur3.case]["x"], plateau_info[Joueur3.case]["y"]))
-            fenetre.blit(Joueur4.image, (plateau_info[Joueur4.case]["x"], plateau_info[Joueur4.case]["y"]))
+            fenetre.blit(Joueur1.image, (Joueur1.coords))
+            fenetre.blit(Joueur2.image, (Joueur2.coords))
+            fenetre.blit(Joueur3.image, (Joueur3.coords))
+            fenetre.blit(Joueur4.image, (Joueur4.coords))
 
         pygame.display.flip()
 

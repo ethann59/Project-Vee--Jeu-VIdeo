@@ -53,13 +53,15 @@ class Joueur():
     def addPv(self : Joueur, pv : int) :
         self.pv += pv
         
-    def setCase(self : Joueur, case : int) :
+    # Il faudra prendre en charge les gros cases ainsi que si il y a plus de 2 joueurs sur la même case + A corriger
+        
+    def setCase(self : Joueur, case : int, plateau : dict) :
         self.case = case
     
     def addCase(self : Joueur, case : int, plateau : dict) :
         if self.case + case > 26 :
             self.case = self.case + case - 26
-            self.addGold(200)
+            self.addGold(100)
         else :
             self.case += case
 

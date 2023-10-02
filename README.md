@@ -29,7 +29,8 @@ Le menu principal permet de lancer une partie rapide ou personnalisée. Il perme
 ## Credits & Licence
 
 Merci ELUECQUE Anthony et DUVET Alexandre pour l'aide au codage
-Merci à The Skindex pour les skins des personnages
+Merci à The Skindex pour l'outil qui a servi à réalisé des personnages
+Merci à Freepik, Khoon Lay Gan et Pngtree pour les pictogrammes utilisés dans le jeu
 
 ## Patch notes
 
@@ -43,3 +44,8 @@ Nettoyage du code.
 ### Patch 0.0.7 R3
 
 Système de déplacement fini. Il reste plus que réparer le bug avec les gros cases et l'affichage des dés.
+
+### Patch 0.0.8
+
+Système de déplacement optimisé. Collistion entre joueurs réalité. Début de codage du système de combat et de case.
+Mise à jour visuelle des cases.

@@ -11,7 +11,6 @@ class game_settings:
         self.fuite_active = True # Si la fuite est active
         self.object_active = True # Si les objets et le marché est actif pour plus de difficultés
         self.hospital_active = True # Si l'hopital est actif
-        self.parc_active = True # Si le parc est actif
         self.pvp_active = True # Si le pvp est actif
         self.pv_player = 100 # Permet de changer les pv du joueur
         self.pam_player = 0 # Permet de changer les points d'armure du joueur au lancement de la partie

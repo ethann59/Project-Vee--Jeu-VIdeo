@@ -7,16 +7,24 @@ from settings import *
 from place_data import *
 from enemy_data import *
 from object_data import *
+from combat import *
 
 # Variables globales
 
-version = "0.0.7"
+version = "0.0.8"
 
 # Variables de la partie
 global settings
 settings = game_settings()
 duree_timer = settings.time_limit
 nb_joueurs = 0
+
+grosses_cases_speciales = {
+    0: "Départ",
+    7: "Prison",
+    13: "Marché",
+    20: "Hopital"
+}
 
 
 # Variables textuels
@@ -255,7 +263,7 @@ def jeu(nb_joueurs, list_playername):
     list_players : list[players.Joueur]= []
     if nb_joueurs == 1:
         Joueur1 = players.Joueur()
-        Joueur1.setNom("Dave")
+        Joueur1.setNom("Dave") # voir pour le mettre en nom par défaut
         Joueur1.setNom(list_playername[0])
         Joueur1.setImage("img/sprites/dave-human.png")
         list_players.append(Joueur1)
@@ -336,6 +344,17 @@ def jeu(nb_joueurs, list_playername):
                     # Déplacer le personnage
                     joueur_actif.addCase(resultat_dee, plateau_info)
                     fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
+                    
+                    # Les ennemis qui apparaissent de manière aléatoire
+                    dee_ennemi = random.randint(0, 100)
+                    if dee_ennemi < 30:
+                        combat()
+                        
+                    # Menu par rapport à la case spéciale
+                    if joueur_actif.case == 13:
+                        shop()
+                    elif joueur_actif.case == 20:
+                        hospital()
 
                     # Gérer le changement de joueur en fonction du nombre de joueurs  
                     if nb_joueurs > 0:
@@ -366,51 +385,44 @@ def jeu(nb_joueurs, list_playername):
         fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
         fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
         fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
-        # fenetre.blit(james.image, (15, 400))
-        
-        # Affichage des joueurs
-        if nb_joueurs == 1:
-            fenetre.blit(Joueur1.image, (15, 15))
-        if nb_joueurs == 2:
-            fenetre.blit(Joueur1.image, (15, 15))
-            fenetre.blit(Joueur2.image, (80, 15))
-        if nb_joueurs == 3:
-            fenetre.blit(Joueur1.image, (15, 15))
-            fenetre.blit(Joueur2.image, (80, 15))
-            fenetre.blit(Joueur3.image, (15, 80))
-        if nb_joueurs == 4:
-            fenetre.blit(Joueur1.image, (15, 15))
-            fenetre.blit(Joueur2.image, (80, 15))
-            fenetre.blit(Joueur3.image, (15, 80))
-            fenetre.blit(Joueur4.image, (80, 80))
-        
+        # fenetre.blit(james.image, (15, 400)) -- Il faut le faire apparaitre quand un joueur a tout les items
+            
         
         # Normalement ça permet de actualiser le plateau
         fenetre.blit(plateau_img, (0,0))
-        fenetre.blit(texte_dee, (700, 450))
+        #fenetre.blit(texte_dee, (700, 450))
         # Affichage des ennemis importants
         fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"]))
         fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
         fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
         fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
-        if nb_joueurs == 1:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
-        if nb_joueurs == 2:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
-            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
-        if nb_joueurs == 3:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
-            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
-            fenetre.blit(Joueur3.image, (plateau_info[Joueur3.case]["x"], plateau_info[Joueur3.case]["y"]))
-        if nb_joueurs == 4:
-            fenetre.blit(Joueur1.image, (plateau_info[Joueur1.case]["x"], plateau_info[Joueur1.case]["y"]))
-            fenetre.blit(Joueur2.image, (plateau_info[Joueur2.case]["x"], plateau_info[Joueur2.case]["y"]))
-            fenetre.blit(Joueur3.image, (plateau_info[Joueur3.case]["x"], plateau_info[Joueur3.case]["y"]))
-            fenetre.blit(Joueur4.image, (plateau_info[Joueur4.case]["x"], plateau_info[Joueur4.case]["y"]))
-
+        
+        
+        # Affichage des joueurs
+        # Il vérifie si le joueur est sur une case spéciale et si oui, il l'affiche à la bonne position ainsi que les autres joueurs sur la même case
+        # Avant c'était un gros if mais j'ai changé pour un dictionnaire, j'en suis plutot fier
+        
+        joueur_case = []
+        for player in list_players:
+            if player.case in grosses_cases_speciales:
+                fenetre.blit(player.image, (plateau_pos_alternatif[grosses_cases_speciales[player.case]][list_players.index(player)]))
+                joueur_case.append(player.case)
+            elif player.case in joueur_case and joueur_case.count(player.case) == 1:
+                fenetre.blit(player.image, (plateau_info[player.case]["x"], plateau_info[player.case]["y"] + 10))
+                joueur_case.append(player.case)
+            elif player.case in joueur_case and joueur_case.count(player.case) == 2:
+                fenetre.blit(player.image, (plateau_info[player.case]["x"], plateau_info[player.case]["y"] - 10))
+                joueur_case.append(player.case)
+            elif player.case in joueur_case and joueur_case.count(player.case) == 3:
+                fenetre.blit(player.image, (plateau_info[player.case]["x"], plateau_info[player.case]["y"] + 20))
+                joueur_case.append(player.case)
+            else:
+                fenetre.blit(player.image, (plateau_info[player.case]["x"], plateau_info[player.case]["y"]))
+                joueur_case.append(player.case)
         pygame.display.flip()
 
 # Boucle principale
+# C'est gérer le menu le passage au jeu etc
 etat = ETAT_MENU  # Commencez dans l'état du menu
        
 while etat != None:

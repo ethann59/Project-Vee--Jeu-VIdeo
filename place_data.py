@@ -23,7 +23,7 @@ plateau_info = {
     17: {"x": 273, "y": 593, "lieu": ""},
     18: {"x": 209, "y": 593, "lieu": ""},
     19: {"x": 145, "y": 593, "lieu": ""},
-    20: {"x": 15, "y": 527, "lieu": "Parc"},
+    20: {"x": 15, "y": 527, "lieu": "Hopital"},
     21: {"x": 15, "y": 463, "lieu": ""},
     22: {"x": 15, "y": 400, "lieu": ""},
     23: {"x": 15, "y": 335, "lieu": ""},
@@ -36,17 +36,13 @@ plateau_pos_alternatif = {
     "Départ": [(15, 15), (80, 15), (15, 80), (80, 80)], #Départ = 0
     "Prison": [(535, 15), (595, 15), (535, 80), (595, 595)], # Prison = 7
     "Marché": [(535, 532), (595, 532), (535, 595), (598, 595)], # Marché = 13
-    "Parc": [(15, 527), (80, 527), (15, 593), (80, 593)] # Parc = 20
+    "Hopital": [(15, 527), (80, 527), (15, 593), (80, 593)] # Hopital = 20
 }
 
 def hospital():
+    print("hospital")
     pass
         
 def shop():
-    pass
-
-def parc():
-    pass
-
-def prison():
+    print("shop")
     pass

@@ -7,6 +7,7 @@ from settings import *
 from place_data import *
 from enemy_data import *
 from object_data import *
+from combat import *
 
 # Variables globales
 
@@ -22,7 +23,7 @@ grosses_cases_speciales = {
     0: "Départ",
     7: "Prison",
     13: "Marché",
-    20: "Parc"
+    20: "Hopital"
 }
 
 
@@ -345,8 +346,15 @@ def jeu(nb_joueurs, list_playername):
                     fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
                     
                     # Les ennemis qui apparaissent de manière aléatoire
-                    dee_ennemi = random.rand(0, 1)
-                    if dee_ennemi > 0.:
+                    dee_ennemi = random.randint(0, 100)
+                    if dee_ennemi < 30:
+                        combat()
+                        
+                    # Menu par rapport à la case spéciale
+                    if joueur_actif.case == 13:
+                        shop()
+                    elif joueur_actif.case == 20:
+                        hospital()
 
                     # Gérer le changement de joueur en fonction du nombre de joueurs  
                     if nb_joueurs > 0:

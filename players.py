@@ -20,6 +20,7 @@ class Joueur():
         self.case = 0
         self.proba_police = 0.2
         self.image = None
+        self.ko = False # Si elle est sur True, le joueur n'obtient pas le bonus du départ et est envoyé à l'hôpital. Ça évite que un joueur fait exprès de perdre pour obtenir des golds.
     
     def setNom(self : Joueur, nom : str) :
         self.nom = nom
@@ -53,15 +54,24 @@ class Joueur():
     def addPv(self : Joueur, pv : int) :
         self.pv += pv
         
+    def setPv(self : Joueur, pv : int) :
+        self.pv = pv
+        
+    def setKo(self : Joueur, ko : bool) :
+        self.ko = ko
+        
     # Il faudra prendre en charge les gros cases ainsi que si il y a plus de 2 joueurs sur la même case + A corriger
         
-    def setCase(self : Joueur, case : int, plateau : dict) :
+    def setCase(self : Joueur, case : int) :
         self.case = case
     
-    def addCase(self : Joueur, case : int, plateau : dict) :
+    def addCase(self : Joueur, case : int) :
         if self.case + case > 26 :
             self.case = self.case + case - 26
-            self.addGold(100)
+            if self.ko == True : # Vérifie si le joueur n'a pas été KO précdément
+                self.ko = False
+            else:
+                self.addGold(100)
         else :
             self.case += case
 

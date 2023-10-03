@@ -1,10 +1,12 @@
 from __future__ import annotations
+import pygame
 
 class GenericObject: #On va définir les objets (armes, armures, potions, etc...)
     def __init__(self):
         self.nom = ""
         self.prix = 0
         self.description = ""
+        self.image = None
         
     def setNom(self : GenericObject, nom : str) :
         self.nom = nom
@@ -14,6 +16,10 @@ class GenericObject: #On va définir les objets (armes, armures, potions, etc...
     
     def setDescription(self : GenericObject, description : str) :
         self.description = description
+    
+    def setImage(self: GenericObject, image: str) :
+        self.image = pygame.image.load(image)
+        self.image = pygame.transform.scale(self.image, (36, 36)) #On redimensionne l'image en fonction
         
 class Arme(GenericObject):
     def __init__(self):

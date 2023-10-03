@@ -12,7 +12,6 @@ class Ennemi:
         self.inventaire = []
         self.arme = ["Simple pistolet"]
         self.image = None
-        self.spawn_taux = 0
         
     def setNom(self : Ennemi, nom : str) :
         self.nom = nom
@@ -40,9 +39,6 @@ class Ennemi:
         self.image = pygame.image.load(image)
         self.image = pygame.transform.scale(self.image, (36, 36))
     
-    def setSpawnTaux(self : Ennemi, taux : float) :
-        self.spawn_taux = taux
-    
 class EnnemiImportant(Ennemi): # Uniquement pour James et ses protégés
     def __init__(self):
         super().__init__()
@@ -50,8 +46,7 @@ class EnnemiImportant(Ennemi): # Uniquement pour James et ses protégés
         self.final_boss = False
         self.case = 0
         self.killed = False # Si c'est True, il n'apparait plus
-        self.spawn_taux = None # Si c'est None, il n'apparait pas aléatoirement
-        
+                
     def setObjetQuete(self : EnnemiImportant, objet : GenericObject) :
         self.quest_object.append(objet)
     
@@ -61,6 +56,5 @@ class EnnemiImportant(Ennemi): # Uniquement pour James et ses protégés
     def setCase(self : EnnemiImportant, case : int) :
         self.case = case
 
-    
     def setKilled(self : EnnemiImportant, killed : bool) :
         self.killed = killed

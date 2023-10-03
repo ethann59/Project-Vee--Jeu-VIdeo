@@ -11,7 +11,7 @@ from combat import *
 
 # Variables globales
 
-version = "0.0.8"
+version = "0.0.9"
 
 # Variables de la partie
 global settings
@@ -347,14 +347,24 @@ def jeu(nb_joueurs, list_playername):
                     
                     # Les ennemis qui apparaissent de manière aléatoire
                     dee_ennemi = random.randint(0, 100)
+                    if dee_ennemi < 15:
+                        combat(joueur_actif, delinquant)
                     if dee_ennemi < 30:
-                        combat()
+                        combat(joueur_actif, voleur)
                         
                     # Menu par rapport à la case spéciale
                     if joueur_actif.case == 13:
                         shop()
                     elif joueur_actif.case == 20:
                         hospital()
+                    elif joueur_actif.case == ap_James1.case:
+                        combat(joueur_actif, ap_James1)
+                    elif joueur_actif.case == ap_James2.case:
+                        combat(joueur_actif, ap_James2)
+                    elif joueur_actif.case == ap_James3.case:
+                        combat(joueur_actif, ap_James3)
+                    elif joueur_actif.case == ap_James4.case:
+                        combat(joueur_actif, ap_James4)
 
                     # Gérer le changement de joueur en fonction du nombre de joueurs  
                     if nb_joueurs > 0:
@@ -379,23 +389,15 @@ def jeu(nb_joueurs, list_playername):
         fenetre.blit(quelle_joueur, (700, 10))
         fenetre.blit(argent_joueur, (700, 50))
         
-    
-        # Affichage des ennemis importants
-        fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"]))
-        fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
-        fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
-        fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
-        # fenetre.blit(james.image, (15, 400)) -- Il faut le faire apparaitre quand un joueur a tout les items
-            
-        
         # Normalement ça permet de actualiser le plateau
         fenetre.blit(plateau_img, (0,0))
         #fenetre.blit(texte_dee, (700, 450))
         # Affichage des ennemis importants
-        fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"]))
+        fenetre.blit(ap_James1.image, (plateau_info[ap_James1.case]["x"], plateau_info[ap_James1.case]["y"])) # Peut etre les faire bouger un jour
         fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
         fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
         fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
+        # fenetre.blit(james.image, (15, 400)) -- Il faut le faire apparaitre quand un joueur a tout les items
         
         
         # Affichage des joueurs

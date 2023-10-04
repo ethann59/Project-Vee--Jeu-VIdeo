@@ -348,9 +348,14 @@ def jeu(nb_joueurs, list_playername):
                     # Les ennemis qui apparaissent de manière aléatoire
                     dee_ennemi = random.randint(0, 100)
                     if dee_ennemi < 15:
-                        combat(joueur_actif, delinquant)
+                        combat_pve(joueur_actif, delinquant)
                     if dee_ennemi < 30:
-                        combat(joueur_actif, voleur)
+                        combat_pve(joueur_actif, voleur)
+                        
+                    # PvP
+                    for player in list_players:
+                        if joueur_actif.case == player.case and joueur_actif != player:
+                            combat_pvp(joueur_actif, player)
                         
                     # Menu par rapport à la case spéciale
                     if joueur_actif.case == 13:
@@ -358,13 +363,13 @@ def jeu(nb_joueurs, list_playername):
                     elif joueur_actif.case == 20:
                         hospital()
                     elif joueur_actif.case == ap_James1.case:
-                        combat(joueur_actif, ap_James1)
+                        combat_pve(joueur_actif, ap_James1)
                     elif joueur_actif.case == ap_James2.case:
-                        combat(joueur_actif, ap_James2)
+                        combat_pve(joueur_actif, ap_James2)
                     elif joueur_actif.case == ap_James3.case:
-                        combat(joueur_actif, ap_James3)
+                        combat_pve(joueur_actif, ap_James3)
                     elif joueur_actif.case == ap_James4.case:
-                        combat(joueur_actif, ap_James4)
+                        combat_pve(joueur_actif, ap_James4)
 
                     # Gérer le changement de joueur en fonction du nombre de joueurs  
                     if nb_joueurs > 0:

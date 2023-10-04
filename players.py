@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from objects import *
 from settings import game_settings
-from place_data import plateau_info
 import pygame
 
 class Joueur():    

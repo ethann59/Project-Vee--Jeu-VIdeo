@@ -17,7 +17,7 @@ class Joueur():
         self.Score = 0
         self.Timer = 0
         self.case = 0
-        self.proba_police = 0.2
+        self.proba_police = 0.1
         self.image = None
         self.ko = False # Si elle est sur True, le joueur n'obtient pas le bonus du départ et est envoyé à l'hôpital. Ça évite que un joueur fait exprès de perdre pour obtenir des golds.
     

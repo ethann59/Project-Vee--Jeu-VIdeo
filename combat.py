@@ -11,7 +11,7 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
     enemyshield_on = 0
     playershield_on = 0
     show_inventory = False  # Au départ, l'inventaire est masqué
-
+    grenade_flash_active = False
     
     # Créez des boutons "Attaquer", "Défendre" et "Fuir"
     defend_button = pygame.Rect(200, 200, 100, 50)
@@ -20,6 +20,7 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
     inventory_button = pygame.Rect(500, 200, 100, 50)
     
     # Stocker le texte dans une variable pour le changer sur l'affichage
+    # Penser à afficher les images des ennemis et du joueur
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -30,10 +31,10 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
                     # Logique d'attaque
                     # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
                     if enemyshield_on == 1:
-                        ennemi.pv -= (joueur.attaque - ennemi.defense)
+                        ennemi.pv -= (joueur.patt - ennemi.pam)
                         main.fenetre.blit(("Il a bloqué l'attaque ! Il lui reste " + str(ennemi.pv) + " PV"), (50, 50))                    
                     if enemyshield_on == 0:
-                        ennemi.pv -= joueur.attaque
+                        ennemi.pv -= joueur.patt
                         main.fenetre.blit(("Il lui reste " + str(ennemi.pv) + " PV"), (50, 50))
                 elif defend_button.collidepoint(event.pos):
                     # Logique de défense
@@ -81,20 +82,31 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
         main.fenetre.blit(("Vous avez votre bouclier activé"), (50, 150))
     if playershield_on == 0:
         main.fenetre.blit(("Vous avez votre bouclier désactivé"), (50, 150))
-        
+    
+    # Coder le système de bouclier temporaire
+    
     # Choix de l'ennemi
-    ennemi_choice = random.randint(1, 2)
-    if ennemi_choice == 1:
-        main.fenetre.blit(("L'ennemi attaque"), (50, 250))
-        if playershield_on == 1:
-            joueur.pv -= (ennemi.attaque - joueur.defense)
-            main.fenetre.blit(("Vous avez bloqué l'attaque ! Il vous reste " + str(joueur.pv) + " PV"), (50, 300))
-        if playershield_on == 0:
-            joueur.pv -= ennemi.attaque
-            main.fenetre.blit(("Il vous reste " + str(joueur.pv) + " PV"), (50, 300))
-    if ennemi_choice == 2:
-        main.fenetre.blit(("L'ennemi se défend"), (50, 250))
-        enemyshield_on = 1
+    if grenade_flash_active == True:
+        main.fenetre.blit(("L'ennemi est aveuglé"), (50, 250))
+        temp_turn += 1
+        if temp_turn == 2:
+            grenade_flash_active = False
+            temp_turn = 0
+    else:
+        ennemi_choice = random.randint(1, 2)
+        if ennemi_choice == 1:
+            main.fenetre.blit(("L'ennemi attaque"), (50, 250))
+            if playershield_on == 1:
+                joueur.pv -= (ennemi.patt - joueur.pam)
+                main.fenetre.blit(("Vous avez bloqué l'attaque ! Il vous reste " + str(joueur.pv) + " PV"), (50, 300))
+            if playershield_on == 0:
+                joueur.pv -= ennemi.patt
+                main.fenetre.blit(("Il vous reste " + str(joueur.pv) + " PV"), (50, 300))
+        if ennemi_choice == 2:
+            main.fenetre.blit(("L'ennemi se défend"), (50, 250))
+            enemyshield_on = 1
+        
+    # Pensez à coder l'event "police"
         
     # Conditions de victoire et de défaite
     if joueur.pv <= 0:
@@ -110,3 +122,5 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
 
 def combat_pvp(joueur1: Joueur, joueur2: Joueur):
     print("combat pvp")
+    return joueur1.pv, joueur2.pv
+

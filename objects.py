@@ -37,6 +37,11 @@ class Arme(GenericObject):
     #def setCritique(self : Arme, critique : int) :
     #    self.critique = critique
     
+class GrenadeFlash(Arme):
+    def __init__(self):
+        super().__init__()
+        self.turn_pass = True
+    
 class Armure(GenericObject):
     def __init__(self):
         super().__init__()
@@ -66,3 +71,11 @@ class TempShield(GenericObject):
         self.duree = duree
         
 # Peut etre faire une classe pour les objets de quête
+
+class QuestObject(GenericObject):
+    def __init__(self):
+        super().__init__()
+        self.id = 0
+        
+    def setId(self : QuestObject, id : int) :
+        self.id = id

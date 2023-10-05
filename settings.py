@@ -8,6 +8,7 @@ class game_settings:
     def __init__(self):
         self.nb_player = 1 # Permet de changer le nombre de joueurs
         self.police_active = True # Si la police est active
+        self.police_multiplier = 1 # Permet de changer la puissance de la police (1 = normal, 2 = double, 0.5 = moitié)
         self.fuite_active = True # Si la fuite est active
         self.object_active = True # Si les objets et le marché est actif pour plus de difficultés
         self.hospital_active = True # Si l'hopital est actif
@@ -18,9 +19,10 @@ class game_settings:
         self.gold_player = 0 # Permet de changer l'or du joueur au lancement de la partie
         self.nb_player = 1 # Permet de changer le nombre de joueurs
         self.enemy_power = 1 # Permet de changer la puissance des ennemis (1 = normal, 2 = double, 0.5 = moitié)
-        self.hospital_price = 10 # Permet de changer le prix de l'hopital
+        self.hospital_price = 100 # Permet de changer le prix de l'hopital
         self.time_limit = (10 * 60) # Permet de changer le temps limite de la partie (en minutes), si elle est à 0, la partie n'est pas limité dans le temps
     
+        # Coder les méthodes pour changer les paramètres
 
 # Partie réservé au calcul des scores. Elle sont basés sur les points de vie restants, l'or mais aussi les ennemis tués, les items de quetes ramassés, etc...
 

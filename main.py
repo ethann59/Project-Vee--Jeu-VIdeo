@@ -17,7 +17,7 @@ version = "0.0.9"
 global settings
 settings = game_settings()
 duree_timer = settings.time_limit
-nb_joueurs = 0
+nb_joueurs = 0 # Penser à utiliser la classe game_settings pour changer le nombre de joueurs
 
 grosses_cases_speciales = {
     0: "Départ",
@@ -260,6 +260,8 @@ def jeu(nb_joueurs, list_playername):
     # Création des joueurs selon la classe et les paramètres du jeu
     # A voir comment raccourcir le code
         
+    # Penser à définir les PV des joueurs selon les paramètres du jeu dans la classe game_settings
+    
     list_players : list[players.Joueur]= []
     if nb_joueurs == 1:
         Joueur1 = players.Joueur()

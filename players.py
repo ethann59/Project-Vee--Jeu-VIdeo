@@ -8,6 +8,7 @@ class Joueur():
     def __init__(self):
         self.nom = "Joueur"
         self.pv = 100
+        self.pv_max = 100
         self.pam = 0
         self.pam_temp_duree = 0
         self.patt = 10
@@ -58,6 +59,12 @@ class Joueur():
         
     def setKo(self : Joueur, ko : bool) :
         self.ko = ko
+        
+    def setPvMax(self : Joueur, pv_max : int) :
+        self.pv_max = pv_max
+    
+    def setPamTempDuree(self : Joueur, pam_temp_duree : int) :
+        self.pam_temp_duree = pam_temp_duree
         
     # Il faudra prendre en charge les gros cases ainsi que si il y a plus de 2 joueurs sur la même case + A corriger
         

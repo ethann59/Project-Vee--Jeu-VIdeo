@@ -124,4 +124,4 @@ def shop(argent_joueur, inventaire_joueur):
                                 inventaire_joueur.append(item)
                             else:
                                 # Le joueur n'a pas assez d'argent pour acheter l'objet
-                                print("Vous n'avez pas assez d'argent pour acheter cet objet.")
+                                main.fenetre.blit("Vous n'avez pas assez d'argent pour acheter cet objet.", (50, 300))

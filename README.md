@@ -31,6 +31,7 @@ Le menu principal permet de lancer une partie rapide ou personnalisée. Il perme
 Merci ELUECQUE Anthony et DUVET Alexandre pour l'aide au codage
 Merci à The Skindex pour l'outil qui a servi à réalisé des personnages
 Merci à Freepik, Khoon Lay Gan et Pngtree pour les pictogrammes utilisés dans le jeu
+Le background a été réalisé avec DALL-E 3 via Bing
 
 ## Patch notes
 

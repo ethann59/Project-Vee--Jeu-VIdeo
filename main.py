@@ -11,7 +11,7 @@ from combat import *
 
 # Variables globales
 
-version = "0.0.9"
+version = "0.1.0"
 
 # Variables de la partie
 global settings
@@ -39,7 +39,8 @@ inventaire_text = font.render("Inventaire :", True, (55, 42, 60))
 
 plateau_img = pygame.image.load("img/scenes/plateau.jpg")
 plateau_img = pygame.transform.scale(plateau_img, (648, 644))
-
+background_img = pygame.image.load("img/scenes/fantasy_london_flou.jpg")
+# Voir pour appliquer un effet de flou
 inventaire_img = pygame.image.load("img/scenes/inventaire.png")
 
 # Initialisation de Pygame
@@ -134,10 +135,10 @@ def menu_principal():
                     en_cours = False  # Action du bouton "Quitter"
 
         fenetre.fill(BLANC)  # Efface l'écran
-
+        fenetre.blit(background_img, (0, 0))
         # Dessinez vos boutons dans l'état du menu
-        titre = font.render("Project Vee", True, (55, 42, 60))
-        sous_titre = font.render("Version " + version, True, (55, 42, 60))
+        titre = font.render("Project Vee", True, BLANC)
+        sous_titre = font.render("Version " + version, True, BLANC)
         fenetre.blit(titre, (100, 100))
         fenetre.blit(sous_titre, (100, 150))
         # Changer les positions des boutons pour les espacer
@@ -184,8 +185,9 @@ def nombre_joueurs():
                     return nb_joueurs
 
         fenetre.fill(BLANC)  # Efface l'écran
+        fenetre.blit(background_img, (0, 0))
         
-        player_text = font.render("Combien de joueurs ?", True, (55, 42, 60))
+        player_text = font.render("Combien de joueurs ?", True, BLANC)
         fenetre.blit(player_text, (250, 100))
 
         # Dessinez vos boutons dans l'état du menu
@@ -218,13 +220,14 @@ def nom_joueurs(nb_joueurs): # Ça marche mais il attribue pas les noms aux joue
                         nom += event.unicode  # Ajoutez le caractère saisi au nom
 
             fenetre.fill(BLANC)  # Effacez l'écran
+            fenetre.blit(background_img, (0, 0))
 
             # Affichez un message invitant le joueur à saisir son nom
-            texte_surface = font.render(f"Joueur {i}, saisissez votre nom:", True, NOIR)
+            texte_surface = font.render(f"Joueur {i}, saisissez votre nom:", True, BLANC)
             fenetre.blit(texte_surface, (100, 100))
 
             # Affichez le nom saisi jusqu'à présent
-            nom_surface = font.render(nom, True, NOIR)
+            nom_surface = font.render(nom, True, BLANC)
             fenetre.blit(nom_surface, (100, 150))
 
             pygame.display.flip()
@@ -372,6 +375,8 @@ def jeu(nb_joueurs, list_playername):
                         combat_pve(joueur_actif, ap_James3)
                     elif joueur_actif.case == ap_James4.case:
                         combat_pve(joueur_actif, ap_James4)
+                    elif joueur_actif.case == james.case and ItemQuete1 in joueur_actif.inventaire and ItemQuete2 in joueur_actif.inventaire and ItemQuete3 in joueur_actif.inventaire and ItemQuete4 in joueur_actif.inventaire:
+                        combat_pve(joueur_actif, james)
 
                     # Gérer le changement de joueur en fonction du nombre de joueurs  
                     if nb_joueurs > 0:
@@ -381,6 +386,7 @@ def jeu(nb_joueurs, list_playername):
         fenetre.fill(BLANC)  # Efface l'écran
 
         fenetre.fill((255, 255, 255))
+        fenetre.blit(background_img, (0,0))
         fenetre.blit(plateau_img, (0,0))
         fenetre.blit(tuto, (700, 450))
         # Affichage du timer
@@ -390,6 +396,10 @@ def jeu(nb_joueurs, list_playername):
         # Affichage de l'inventaire
         fenetre.blit(inventaire_text, (700, 100))
         fenetre.blit(inventaire_img, (700, 150))
+        # Affichage des items de quetes du joueur
+        item_quest = font.render("Items de quêtes :", True, (55, 42, 60))
+        fenetre.blit(item_quest, (700, 200))
+        #fenetre.blit("Item 1", (700, 250)) A faire quand on aura les images
         # Affichage du joueur
         quelle_joueur = font.render(joueur_actif.nom, True, (55, 42, 60))
         argent_joueur = font.render("Or : " + str(joueur_actif.gold), True, (55, 42, 60))
@@ -404,7 +414,9 @@ def jeu(nb_joueurs, list_playername):
         fenetre.blit(ap_James2.image, (plateau_info[ap_James2.case]["x"], plateau_info[ap_James2.case]["y"]))
         fenetre.blit(ap_James3.image, (plateau_info[ap_James3.case]["x"], plateau_info[ap_James3.case]["y"]))
         fenetre.blit(ap_James4.image, (plateau_info[ap_James4.case]["x"], plateau_info[ap_James4.case]["y"]))
-        # fenetre.blit(james.image, (15, 400)) -- Il faut le faire apparaitre quand un joueur a tout les items
+        
+        if ItemQuete1 in joueur_actif.inventaire and ItemQuete2 in joueur_actif.inventaire and ItemQuete3 in joueur_actif.inventaire and ItemQuete4 in joueur_actif.inventaire:
+            fenetre.blit(james.image, (plateau_info[james.case]["x"], plateau_info[james.case]["y"]))
         
         
         # Affichage des joueurs
@@ -428,6 +440,22 @@ def jeu(nb_joueurs, list_playername):
             else:
                 fenetre.blit(player.image, (plateau_info[player.case]["x"], plateau_info[player.case]["y"]))
                 joueur_case.append(player.case)
+                
+                
+        # Affichage du score du joueur
+        # Pas oublier de faire le calcul
+        
+        score_text = font.render("Score :" + str(joueur_actif.score), True, BLANC)
+        fenetre.blit(score_text, (700, 250))
+        
+        # Conditions de fin de partie
+        
+        if duree_timer == 0 and settings.time_limit_active == True:
+            pass # A faire
+        elif james.killed == True:
+            pass # A faire
+                
+                
         pygame.display.flip()
 
 # Boucle principale
@@ -438,8 +466,8 @@ while etat != None:
     if etat == ETAT_MENU:
         etat=menu_principal()
     elif etat == ETAT_JEU:
-        if nb_joueurs == 0:
-            nb_joueurs=nombre_joueurs()
+        if settings.nb_player == 0:
+            settings.nb_player=nombre_joueurs()
             list_playername=nom_joueurs(nb_joueurs)
             ennemi_random_place()
         etat=jeu(nb_joueurs, list_playername)

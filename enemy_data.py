@@ -1,5 +1,6 @@
 #On stockera les ennemis ce fichier
 import ennemis as en
+import object_data as od
 import pygame
 
 
@@ -41,7 +42,7 @@ en.EnnemiImportant.ap_James1.pam = 0
 en.EnnemiImportant.ap_James1.patt = 20
 en.EnnemiImportant.ap_James1.gold = 100
 en.EnnemiImportant.ap_James1.inventaire = []
-en.EnnemiImportant.ap_James1.quest_object = ["Item de quête 1"]
+en.EnnemiImportant.ap_James1.quest_object = [od.ItemQuete1]
 en.EnnemiImportant.ap_James1.final_boss = False
 en.EnnemiImportant.ap_James1.arme = ["Livre de magie"]
 en.EnnemiImportant.ap_James1.spawn_taux = 0
@@ -60,7 +61,7 @@ en.EnnemiImportant.ap_James2.pam = 0
 en.EnnemiImportant.ap_James2.patt = 20
 en.EnnemiImportant.ap_James2.gold = 100
 en.EnnemiImportant.ap_James2.inventaire = []
-en.EnnemiImportant.ap_James2.quest_object = ["Item de quête 2"]
+en.EnnemiImportant.ap_James2.quest_object = [od.ItemQuete2]
 en.EnnemiImportant.ap_James2.final_boss = False
 en.EnnemiImportant.ap_James2.arme = ["Livre de magie"] # Peut etre les faire varier
 en.EnnemiImportant.ap_James2.spawn_taux = 0
@@ -79,7 +80,7 @@ en.EnnemiImportant.ap_James3.pam = 0
 en.EnnemiImportant.ap_James3.patt = 20
 en.EnnemiImportant.ap_James3.gold = 250
 en.EnnemiImportant.ap_James3.inventaire = []
-en.EnnemiImportant.ap_James3.quest_object = ["Item de quête 3"]
+en.EnnemiImportant.ap_James3.quest_object = [od.ItemQuete3]
 en.EnnemiImportant.ap_James3.final_boss = False
 en.EnnemiImportant.ap_James3.arme = ["Livre de magie"] # Peut etre les faire varier
 en.EnnemiImportant.ap_James3.spawn_taux = 0

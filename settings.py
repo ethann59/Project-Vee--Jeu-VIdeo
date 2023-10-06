@@ -20,7 +20,8 @@ class game_settings:
         self.nb_player = 1 # Permet de changer le nombre de joueurs
         self.enemy_power = 1 # Permet de changer la puissance des ennemis (1 = normal, 2 = double, 0.5 = moitié)
         self.hospital_price = 100 # Permet de changer le prix de l'hopital
-        self.time_limit = (10 * 60) # Permet de changer le temps limite de la partie (en minutes), si elle est à 0, la partie n'est pas limité dans le temps
+        self.time_limit = (10 * 60) # Permet de changer le temps limite de la partie (en minutes)
+        self.time_limit_active = True # Si le temps limite est actif
     
         # Coder les méthodes pour changer les paramètres
 

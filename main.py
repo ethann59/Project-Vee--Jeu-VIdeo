@@ -2,16 +2,25 @@
 import pygame.font
 import time, sys, random
 # Importation des fichiers
-import players, ennemis, objects
+import players
 from settings import *
 from place_data import *
 from enemy_data import *
 from object_data import *
 from combat import *
+from plateau import *
 
 # Variables globales
 
 version = "0.1.0"
+
+# Couleurs
+BLANC = (255, 255, 255)
+NOIR = (0, 0, 0)
+VERT = (0, 255, 0)
+ROUGE = (255, 0, 0)
+GRIS = (128, 128, 128)
+BLEU = (0, 0, 255)
 
 # Variables de la partie
 global settings
@@ -31,9 +40,9 @@ grosses_cases_speciales = {
 
 pygame.font.init()
 font = pygame.font.Font(None, 36)  # Crée une police avec une taille de 36 points (vous pouvez ajuster la taille selon vos besoins)
-texte = font.render("Votre texte ici", True, (55, 42, 60))  # Texte blanc avec antialiasing
-timer_text = font.render("Temps restant : " + str(duree_timer), True, (55, 42, 60))
-inventaire_text = font.render("Inventaire :", True, (55, 42, 60))
+texte = font.render("Votre texte ici", True, BLANC)  # Texte blanc avec antialiasing
+timer_text = font.render("Temps restant : " + str(duree_timer), True, BLANC)
+inventaire_text = font.render("Inventaire :", True, BLANC)
     
 # Variables graphiques
 
@@ -50,14 +59,6 @@ pygame.init()
 taille_fenetre = (1000,644)
 fenetre = pygame.display.set_mode(taille_fenetre)
 pygame.display.set_caption("Project Vee - Developement Build " + version)
-
-# Couleurs
-BLANC = (255, 255, 255)
-NOIR = (0, 0, 0)
-VERT = (0, 255, 0)
-ROUGE = (255, 0, 0)
-GRIS = (128, 128, 128)
-BLEU = (0, 0, 255)
 
 # Fonction graphiques
 def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
@@ -88,15 +89,15 @@ def timer():
     """
     global duree_timer
     duree_timer -= 1
-    timer_text = font.render("Temps restant : " + str(duree_timer), True, (55, 42, 60))
+    timer_text = font.render("Temps restant : " + str(duree_timer), True, BLANC)
     if duree_timer == 0:
-        timer_text = font.render("Temps écoulé !", True, (55, 42, 60))
+        timer_text = font.render("Temps écoulé !", True, BLANC)
     return timer_text
 
 def dee():
     # Il faudrait créer une attente sans pour autant que ce soit instantané ou faire crash le logiciel
     resultat_dee = random.randint(1, 6)
-    texte_dee = font.render("Vous avez fait un " + str(resultat_dee), True, (55, 42, 60))
+    texte_dee = font.render("Vous avez fait un " + str(resultat_dee), True, BLANC)
     #time.sleep(1)
     return texte_dee, resultat_dee
 
@@ -330,7 +331,7 @@ def jeu(nb_joueurs, list_playername):
     joueur_actif = list_players[0] # A changer selon le joueur
     
     # Micro tuto
-    tuto = font.render("Lancer le dé : [Espace]", True, (55, 42, 60)) # Voir comment le faire apparaitre que une fois
+    tuto = font.render("Lancer le dé : [Espace]", True, BLANC) # Voir comment le faire apparaitre que une fois
     #first_tour = True
     
     fenetre.blit(tuto, (700, 450))
@@ -352,7 +353,7 @@ def jeu(nb_joueurs, list_playername):
                         fenetre.blit(texte_dee, (700, 400)) # Je sais pas pourquoi mais ça marche pas
 
                         # Déplacer le personnage
-                        joueur_actif.addCase(resultat_dee, plateau_info)
+                        joueur_actif.addCase(resultat_dee)
                         fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
                     
                         # Les ennemis qui apparaissent de manière aléatoire
@@ -395,19 +396,19 @@ def jeu(nb_joueurs, list_playername):
         fenetre.blit(plateau_img, (0,0))
         fenetre.blit(tuto, (700, 450))
         # Affichage du timer
-        temp_timer_text = font.render("Temps restant : X:XX", True, (55, 42, 60))
+        temp_timer_text = font.render("Temps restant : X:XX", True, BLANC)
         fenetre.blit(temp_timer_text, (700, 350))
         #fenetre.blit(timer_txt=timer()), (700, 300)
         # Affichage de l'inventaire
         fenetre.blit(inventaire_text, (700, 100))
         fenetre.blit(inventaire_img, (700, 150))
         # Affichage des items de quetes du joueur
-        item_quest = font.render("Items de quêtes :", True, (55, 42, 60))
-        fenetre.blit(item_quest, (700, 200))
+        item_quest = font.render("Items de quêtes :", True, BLANC)
+        fenetre.blit(item_quest, (700, 500))
         #fenetre.blit("Item 1", (700, 250)) A faire quand on aura les images
         # Affichage du joueur
-        quelle_joueur = font.render(joueur_actif.nom, True, (55, 42, 60))
-        argent_joueur = font.render("Or : " + str(joueur_actif.gold), True, (55, 42, 60))
+        quelle_joueur = font.render(joueur_actif.nom, True, BLANC)
+        argent_joueur = font.render("Or : " + str(joueur_actif.gold), True, BLANC)
         fenetre.blit(quelle_joueur, (700, 10))
         fenetre.blit(argent_joueur, (700, 50))
         
@@ -450,8 +451,8 @@ def jeu(nb_joueurs, list_playername):
         # Affichage du score du joueur
         # Pas oublier de faire le calcul
         
-        score_text = font.render("Score :" + str(joueur_actif.score), True, BLANC)
-        fenetre.blit(score_text, (700, 250))
+        score_text = font.render("Score :" + str(joueur_actif.Score), True, BLANC)
+        fenetre.blit(score_text, (700, 550))
         
         # Conditions de fin de partie
         
@@ -470,11 +471,11 @@ while etat != None:
     if etat == ETAT_MENU:
         etat=menu_principal()
     elif etat == ETAT_JEU:
-        if settings.nb_player == 0:
-            settings.nb_player=nombre_joueurs()
+        if nb_joueurs == 0:
+            nb_joueurs=nombre_joueurs()
             list_playername=nom_joueurs(nb_joueurs)
             ennemi_random_place()
-        etat=jeu(nb_joueurs, list_playername)
+            etat=jeu(settings.nb_player, list_playername)
 
 pygame.quit()
 sys.exit()

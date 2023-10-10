@@ -60,10 +60,15 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
 
     # Affichez les textes des boutons
     
-    main.fenetre.blit(("Attaquer"), (attack_button.x + 10, attack_button.y + 10))
-    main.fenetre.blit(("Défendre"), (defend_button.x + 10, defend_button.y + 10))
-    main.fenetre.blit(("Fuir"), (flee_button.x + 10, flee_button.y + 10))
-    main.fenetre.blit(("Inventaire"), (inventory_button.x + 10, inventory_button.y + 10))
+    attack_text= main.font.render("Attaquer", True, main.BLANC)
+    defend_text = main.font.render("Défendre", True, main.BLANC)
+    flee_text = main.font.render("Fuir", True, main.BLANC)
+    inventory_text = main.font.render("Inventaire", True, main.BLANC)
+    
+    main.fenetre.blit(attack_text, (attack_button.x + 10, attack_button.y + 10))
+    main.fenetre.blit(defend_text, (defend_button.x + 10, defend_button.y + 10))
+    main.fenetre.blit(flee_text, (flee_button.x + 10, flee_button.y + 10))
+    main.fenetre.blit(inventory_text, (inventory_button.x + 10, inventory_button.y + 10))
     
     
     # Afficher l'inventaire si le bouton est cliqué

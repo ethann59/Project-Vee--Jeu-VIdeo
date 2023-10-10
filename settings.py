@@ -6,7 +6,7 @@ from __future__ import annotations
 # Mais on peut l'utiliser pour les parties normales aussi (enfin il a des choses que on va jamais utiliser mais bon)
 class game_settings:
     def __init__(self):
-        self.nb_player = 1 # Permet de changer le nombre de joueurs
+        self.nb_player = 0 # Permet de changer le nombre de joueurs
         self.police_active = True # Si la police est active
         self.police_multiplier = 1 # Permet de changer la puissance de la police (1 = normal, 2 = double, 0.5 = moitié)
         self.fuite_active = True # Si la fuite est active

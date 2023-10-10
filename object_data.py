@@ -17,6 +17,7 @@ PotionVie.setPV(50)
 ChampDeForce = TempShield()
 ChampDeForce.setNom("Champ de force")
 ChampDeForce.setPrix(50)
+ChampDeForce.setDefense(50)
 ChampDeForce.setDescription("Un champ de force qui vous protège pendant 3 tours")
 
 

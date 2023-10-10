@@ -4,6 +4,7 @@ from ennemis import *
 from enemy_data import *
 import random
 import main
+from objects import *
 
 def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventaire au passage
     main.fenetre.fill(main.BLANC)
@@ -85,6 +86,11 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
         main.fenetre.blit(("Vous avez votre bouclier désactivé"), (50, 150))
     
     # Coder le système de bouclier temporaire
+    if joueur.pam_temp_duree > 0:
+        joueur.pam_temp_duree -= 1
+    elif joueur.pam_temp_duree == 0:
+        joueur.pam = 0
+        joueur.pam_temp_duree = 0
     
     # Choix de l'ennemi
     if grenade_flash_active == True:
@@ -108,6 +114,12 @@ def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventair
             enemyshield_on = 1
         
     # Pensez à coder l'event "police"
+    if random.randint(0, 100) <= joueur.proba_police:
+        main.fenetre.blit(("Wuwu ! Ceci est une descente de la police !"), (50, 350))
+        joueur.setCase(7)
+        joueur.setKo(False)
+        joueur.activatePrison()
+        return joueur.pv, joueur.gold
         
     # Conditions de victoire et de défaite
     if joueur.pv <= 0:
@@ -152,10 +164,10 @@ def combat_pvp_beta(joueur1: Joueur, joueur2: Joueur):
                 if attack_button.collidepoint(event.pos):
                     # Logique d'attaque
                     # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
-                    if enemyshield_on == 1:
+                    if player2shield_on == 1:
                         joueur2.pv -= (joueur1.patt - joueur2.pam)
                         main.fenetre.blit(("Il a bloqué l'attaque ! Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))                    
-                    if enemyshield_on == 0:
+                    if player2shield_on == 0:
                         joueur2.pv -= joueur1.patt
                         main.fenetre.blit(("Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))
                 elif defend_button.collidepoint(event.pos):
@@ -193,33 +205,49 @@ def combat_pvp_beta(joueur1: Joueur, joueur2: Joueur):
         pass
     # Affichez les PV du joueur et de l'ennemi
     
-    main.fenetre.blit(("Vous avez " + str(joueur.pv) + " PV"), (50, 100))
+    main.fenetre.blit((joueur1.name, " a " + str(joueur1.pv) + " PV"), (50, 100))
     
-    main.fenetre.blit(("L'ennemi a " + str(ennemi.pv) + " PV"), (50, 150))
+    main.fenetre.blit((joueur1.name, " a " + str(joueur2.pv) + " PV"), (50, 150))
         
-    if playershield_on == 1:
+    if player1shield_on == 1:
         main.fenetre.blit(("Vous avez votre bouclier activé"), (50, 150))
-    if playershield_on == 0:
+    if player2shield_on == 0:
         main.fenetre.blit(("Vous avez votre bouclier désactivé"), (50, 150))
     
     # Coder le système de bouclier temporaire
     
     # Choix du joueur 2
     
+    
+    
         
     # Pensez à coder l'event "police"
         
     # Conditions de victoire et de défaite
-    if joueur.pv <= 0:
+    if joueur1.pv <= 0:
         main.fenetre.blit(("Vous avez perdu !"), (50, 350))
-        joueur.setCase(20)
-        joueur.setKo(True)
-        return joueur.pv, joueur.gold
-    if ennemi.pv <= 0:
+        joueur1.setCase(20)
+        joueur1.setKo(True)
+        return joueur1.pv, joueur1.gold
+    if joueur2.pv <= 0:
         main.fenetre.blit(("Vous avez gagné !"), (50, 350))
-        joueur.gold += ennemi.gold
-        joueur.addScore(enemy_pv_de_base)
+        joueur1.gold += joueur2.gold
+        joueur2.setCase(20)
+        joueur2.setKo(True)
+        # Vérifier si le joueur 2 a un objet de quête et si il en a un, de piocher parmi ce qu'il a, et de le donner au joueur 1
+        if QuestObject in joueur2.inventaire:
+            # On liste les objets de quête que le joueur 2 a
+            j2_quest_objects = []
+            for i in joueur2.inventaire:
+                if isinstance(i, QuestObject):
+                    j2_quest_objects.append(i)
+            # On en choisit un au hasard
+            j2_quest_object = random.choice(j2_quest_objects)
+            # On le donne au joueur 1
+            joueur1.inventaire.append(j2_quest_object)
+            # On le retire du joueur 2
+            joueur2.inventaire.remove(j2_quest_object)
+        return joueur1.pv, joueur1.gold
+            
         
-    
-    return joueur.pv, joueur.gold
 

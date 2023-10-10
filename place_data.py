@@ -125,3 +125,15 @@ def shop(argent_joueur, inventaire_joueur):
                             else:
                                 # Le joueur n'a pas assez d'argent pour acheter l'objet
                                 main.fenetre.blit("Vous n'avez pas assez d'argent pour acheter cet objet.", (50, 300))
+                                
+
+def prison(joueur):
+    '''Cette fonction sert à controler le joueur quand il est en prison notamment le bloquer tant que il a pas fait 3 tours'''
+    if joueur.prison == True:
+        if joueur.prison_timer == 3:
+            joueur.prison = False
+            joueur.prison_timer = 0
+            main.fenetre.blit("Vous êtes sorti de prison.", (200, 250))
+        else:
+            joueur.prison_timer += 1
+            main.fenetre.blit("Vous êtes en prison, vous devez attendre 3 tours.", (200, 250))

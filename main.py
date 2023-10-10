@@ -343,44 +343,49 @@ def jeu(nb_joueurs, list_playername):
                 en_cours = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:  # Touche Espace pour lancer le dé
-                    texte_dee, resultat_dee = dee()
-                    fenetre.blit(texte_dee, (700, 400)) # Je sais pas pourquoi mais ça marche pas
+                    # Vérifier si le joueur n'est pas en prison
+                    if joueur_actif.prison == True:
+                        prison(joueur_actif)
+                    else:
+                        # Lancer le dé
+                        texte_dee, resultat_dee = dee()
+                        fenetre.blit(texte_dee, (700, 400)) # Je sais pas pourquoi mais ça marche pas
 
-                    # Déplacer le personnage
-                    joueur_actif.addCase(resultat_dee, plateau_info)
-                    fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
+                        # Déplacer le personnage
+                        joueur_actif.addCase(resultat_dee, plateau_info)
+                        fenetre.blit(joueur_actif.image, (plateau_info[joueur_actif.case]["x"], plateau_info[joueur_actif.case]["y"]))
                     
-                    # Les ennemis qui apparaissent de manière aléatoire
-                    dee_ennemi = random.randint(0, 100)
-                    if dee_ennemi < 15:
-                        combat_pve(joueur_actif, delinquant)
-                    if dee_ennemi < 30:
-                        combat_pve(joueur_actif, voleur)
-                        
-                    # PvP
-                    for player in list_players:
-                        if joueur_actif.case == player.case and joueur_actif != player:
-                            combat_pvp(joueur_actif, player)
-                        
-                    # Menu par rapport à la case spéciale
-                    if joueur_actif.case == 13:
-                        shop()
-                    elif joueur_actif.case == 20:
-                        hospital()
-                    elif joueur_actif.case == ap_James1.case:
-                        combat_pve(joueur_actif, ap_James1)
-                    elif joueur_actif.case == ap_James2.case:
-                        combat_pve(joueur_actif, ap_James2)
-                    elif joueur_actif.case == ap_James3.case:
-                        combat_pve(joueur_actif, ap_James3)
-                    elif joueur_actif.case == ap_James4.case:
-                        combat_pve(joueur_actif, ap_James4)
-                    elif joueur_actif.case == james.case and ItemQuete1 in joueur_actif.inventaire and ItemQuete2 in joueur_actif.inventaire and ItemQuete3 in joueur_actif.inventaire and ItemQuete4 in joueur_actif.inventaire:
-                        combat_pve(joueur_actif, james)
+                        # Les ennemis qui apparaissent de manière aléatoire
+                        dee_ennemi = random.randint(0, 100)
+                        if dee_ennemi < 15:
+                            combat_pve(joueur_actif, delinquant)
+                        if dee_ennemi < 30:
+                            combat_pve(joueur_actif, voleur)
 
-                    # Gérer le changement de joueur en fonction du nombre de joueurs  
-                    if nb_joueurs > 0:
-                        joueur_actif = list_players[(list_players.index(joueur_actif) + 1) % nb_joueurs]
+                        # PvP
+                        for player in list_players:
+                            if joueur_actif.case == player.case and joueur_actif != player:
+                                combat_pvp(joueur_actif, player)
+
+                        
+                        # Menu par rapport à la case spéciale
+                        if joueur_actif.case == 13:
+                            shop()
+                        elif joueur_actif.case == 20:
+                            hospital()
+                        elif joueur_actif.case == ap_James1.case:
+                            combat_pve(joueur_actif, ap_James1)
+                        elif joueur_actif.case == ap_James2.case:
+                            combat_pve(joueur_actif, ap_James2)
+                        elif joueur_actif.case == ap_James3.case:
+                            combat_pve(joueur_actif, ap_James3)
+                        elif joueur_actif.case == ap_James4.case:
+                            combat_pve(joueur_actif, ap_James4)
+                        elif joueur_actif.case == james.case and ItemQuete1 in joueur_actif.inventaire and ItemQuete2 in joueur_actif.inventaire and ItemQuete3 in joueur_actif.inventaire and ItemQuete4 in joueur_actif.inventaire:
+                            combat_pve(joueur_actif, james)
+                        # Gérer le changement de joueur en fonction du nombre de joueurs  
+                        if nb_joueurs > 0:
+                            joueur_actif = list_players[(list_players.index(joueur_actif) + 1) % nb_joueurs]
 
 
         fenetre.fill(BLANC)  # Efface l'écran
@@ -454,7 +459,6 @@ def jeu(nb_joueurs, list_playername):
             pass # A faire
         elif james.killed == True:
             pass # A faire
-                
                 
         pygame.display.flip()
 

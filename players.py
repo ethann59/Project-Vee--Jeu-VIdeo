@@ -18,7 +18,9 @@ class Joueur():
         self.Score = 0
         self.Timer = 0
         self.case = 0
-        self.proba_police = 0.1
+        self.proba_police = 10
+        self.prison = False
+        self.prison_timer = 0
         self.image = None
         self.ko = False # Si elle est sur True, le joueur n'obtient pas le bonus du départ et est envoyé à l'hôpital. Ça évite que un joueur fait exprès de perdre pour obtenir des golds.
     
@@ -84,6 +86,16 @@ class Joueur():
         
     def setProbapolice(self : Joueur, proba : int) :
         self.proba_police = proba
+        
+    def setPrison(self : Joueur, prison : bool) :
+        self.prison = prison
+        
+    def setPrisonTimer(self : Joueur, prison_timer : int) :
+        self.prison_timer = prison_timer
+        
+    def activatePrison(self : Joueur) :
+        self.prison = True
+        self.prison_timer = 3
         
     def setImage(self : Joueur, image : str) :
         self.image = pygame.image.load(image)

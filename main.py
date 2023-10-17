@@ -83,17 +83,6 @@ def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
     
 # Fonctions de la partie
 
-def timer():
-    """
-    Gére le timer du jeu
-    """
-    global duree_timer
-    duree_timer -= 1
-    timer_text = font.render("Temps restant : " + str(duree_timer), True, BLANC)
-    if duree_timer == 0:
-        timer_text = font.render("Temps écoulé !", True, BLANC)
-    return timer_text
-
 def dee():
     # Il faudrait créer une attente sans pour autant que ce soit instantané ou faire crash le logiciel
     resultat_dee = random.randint(1, 6)
@@ -101,9 +90,10 @@ def dee():
     #time.sleep(1)
     return texte_dee, resultat_dee
 
-def police(player : players.Joueur):
-    proba_police = player.proba_police # A modifier plus tard pour les parties personnaliés
-    # A finir
+def save():
+    """
+    Gére la sauvegarde de la partie (parce que apparament il faudrait en faire une)
+    """
     pass
 
 
@@ -256,6 +246,56 @@ def ennemi_random_place():
     james.case = liste_case_ennemi[4]
     
     return ap_James1.case, ap_James2.case, ap_James3.case, ap_James4.case, james.case
+
+def calculate_ranking(players):
+    '''Calculates the ranking based on player scores'''
+    sorted_players = sorted(players, key=lambda player: player.score, reverse=True)
+    ranking = []
+    for i, player in enumerate(sorted_players):
+        ranking.append(f"{i+1}. {player.nom} ({player.score} points)")
+    return ranking
+
+def end_game(motif, list_players):
+    '''Cette fonction permet de gérer la fin de la partie'''
+    fenetre.fill(BLANC)
+    fenetre.blit(background_img, (0, 0))
+    
+    # Calculer le classement
+    classement = calculate_ranking(list_players)
+    texte_1er = font.render(f"classment[0]", True, BLANC)
+    fenetre.blit(texte_1er, (100, 100))
+    texte_2eme = font.render(f"classment[1]", True, BLANC)
+    fenetre.blit(texte_2eme, (100, 150))
+    texte_3eme = font.render(f"classment[2]", True, BLANC)
+    fenetre.blit(texte_3eme, (100, 200))
+    texte_4eme = font.render(f"classment[3]", True, BLANC)
+
+            
+    
+    if motif == "time":
+        texte_fin = font.render("Temps écoulé !", True, BLANC)
+        fenetre.blit(texte_fin, (100, 100))
+        # Afficher le classement
+        classement = font.render("Classement :", True, BLANC)
+        fenetre.blit(classement, (100, 150))
+        fenetre.blit(texte_1er, (100, 200))
+        fenetre.blit(texte_2eme, (100, 250))
+        fenetre.blit(texte_3eme, (100, 300))
+        fenetre.blit(texte_4eme, (100, 350))
+        # Afficher le bouton pour quitter
+        # A faire
+    elif motif == "james":
+        texte_fin = font.render("Vous avez battu James !", True, BLANC)
+        fenetre.blit(texte_fin, (100, 100))
+        # Afficher le classement
+        classement = font.render("Classement :", True, BLANC)
+        fenetre.blit(classement, (100, 150))
+        fenetre.blit(texte_1er, (100, 200))
+        fenetre.blit(texte_2eme, (100, 250))
+        fenetre.blit(texte_3eme, (100, 300))
+        fenetre.blit(texte_4eme, (100, 350))
+        # Afficher le bouton pour quitter
+        # A faire
     
 
 
@@ -330,11 +370,15 @@ def jeu(nb_joueurs, list_playername):
     
     joueur_actif = list_players[0] # A changer selon le joueur
     
+    # Heure de début du timer
+    debut_timer = pygame.time.get_ticks()
+    
     # Micro tuto
     tuto = font.render("Lancer le dé : [Espace]", True, BLANC) # Voir comment le faire apparaitre que une fois
     #first_tour = True
     
     fenetre.blit(tuto, (700, 450))
+    
     
     # Jeu en lui-même
     en_cours = True
@@ -371,9 +415,9 @@ def jeu(nb_joueurs, list_playername):
                         
                         # Menu par rapport à la case spéciale
                         if joueur_actif.case == 13:
-                            shop()
+                            shop(joueur_actif.gold, joueur_actif.inventaire)
                         elif joueur_actif.case == 20:
-                            hospital()
+                            hospital(joueur_actif)
                         elif joueur_actif.case == ap_James1.case:
                             combat_pve(joueur_actif, ap_James1)
                         elif joueur_actif.case == ap_James2.case:
@@ -390,6 +434,16 @@ def jeu(nb_joueurs, list_playername):
 
 
         fenetre.fill(BLANC)  # Efface l'écran
+        
+        # Obtenir le temps écoulé depuis le début du timer
+        temps_ecoule = pygame.time.get_ticks() - debut_timer
+        
+        # Calculer les minutes et les secondes restantes
+        minutes_restantes = (settings.time_limit - temps_ecoule) // 60000
+        secondes_restantes = (settings.time_limit - temps_ecoule) // 1000 % 60
+        
+         # Afficher le minuteur à l'écran
+        timer_text = font.render(f"{minutes_restantes:02}:{secondes_restantes:02}", True, (255, 255, 255))
 
         fenetre.fill((255, 255, 255))
         fenetre.blit(background_img, (0,0))
@@ -398,7 +452,7 @@ def jeu(nb_joueurs, list_playername):
         # Affichage du timer
         temp_timer_text = font.render("Temps restant : X:XX", True, BLANC)
         fenetre.blit(temp_timer_text, (700, 350))
-        #fenetre.blit(timer_txt=timer()), (700, 300)
+        fenetre.blit(timer_text, (700, 400))
         # Affichage de l'inventaire
         fenetre.blit(inventaire_text, (700, 100))
         fenetre.blit(inventaire_img, (700, 150))
@@ -456,10 +510,10 @@ def jeu(nb_joueurs, list_playername):
         
         # Conditions de fin de partie
         
-        if duree_timer == 0 and settings.time_limit_active == True:
-            pass # A faire
+        if temps_ecoule >= settings.time_limit and settings.time_limit != 0:
+            end_game("time", list_players)
         elif james.killed == True:
-            pass # A faire
+            end_game("james", list_players)
                 
         pygame.display.flip()
 

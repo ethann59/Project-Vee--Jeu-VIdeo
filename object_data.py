@@ -2,7 +2,6 @@
 
 import settings as gc
 from objects import *
-object_list = []
 
 GenericObject.ItemTest = GenericObject()
 
@@ -42,6 +41,7 @@ GiletParBalle.setDefense(25)
 items_disponibles = [PotionVie, ChampDeForce, GrenadeFlashe, PistoletMitrailleur, GiletParBalle]
 
 # Penser à cacher les objets uniques pour éviter les achats en double
+
 
 # Items de quete
 

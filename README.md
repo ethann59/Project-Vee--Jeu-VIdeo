@@ -1,4 +1,4 @@
-# Project Vee - Sae Jeu Video
+# Aexo - Le plan de James (Project Vee - Sae Jeu Video)
 
 ## Description
 
@@ -98,4 +98,4 @@ Mise à jour visuelle des cases.
 Système de combat fini.
 Système de case spéciaux (magasin, hopital, etc) fini.
 Nouveau système de timer.
-Il reste plus que le système d'inventaire et le système de fin de partie.
+Il reste plus que le système d'inventaire, le PvP et le système de fin de partie.

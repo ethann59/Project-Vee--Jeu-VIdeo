@@ -175,6 +175,7 @@ def combat_pvp_beta(joueur1: Joueur, joueur2: Joueur):
     player2shield_on = 0
     show_inventory = False  # Au départ, l'inventaire est masqué
     grenade_flash_active = False
+    joueur_actif = joueur1
     
     # Créez des boutons "Attaquer", "Défendre" et "Fuir"
     defend_button = pygame.Rect(200, 200, 100, 50)
@@ -193,25 +194,46 @@ def combat_pvp_beta(joueur1: Joueur, joueur2: Joueur):
             main.en_cours = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Bouton gauche de la souris
-                if attack_button.collidepoint(event.pos):
-                    # Logique d'attaque
-                    # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
-                    if player2shield_on == 1:
-                        joueur2.pv -= (joueur1.patt - joueur2.pam)
-                        main.fenetre.blit(("Il a bloqué l'attaque ! Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))                    
-                    if player2shield_on == 0:
-                        joueur2.pv -= joueur1.patt
-                        main.fenetre.blit(("Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))
-                elif defend_button.collidepoint(event.pos):
-                    # Logique de défense
-                    # Réduisez les dégâts subis par le joueur ou augmentez sa défense
-                    playershield_on = 1
-                    main.fenetre.blit(("Vous vous préparez votre bouclier."), (50, 50))
-                elif flee_button.collidepoint(event.pos):
-                    # Logique de fuite
-                    # Terminez la partie ou retournez à un écran précédent
-                    main.fenetre.blit(("Vous avez fui le combat."), (50, 50))
-                    return joueur1.pv, joueur2.pv
+                if joueur_actif == joueur1:
+                    if attack_button.collidepoint(event.pos):
+                        # Logique d'attaque
+                        # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
+                        if player2shield_on == 1:
+                            joueur2.pv -= (joueur1.patt - joueur2.pam)
+                            main.fenetre.blit(("Il a bloqué l'attaque ! Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))                    
+                        if player2shield_on == 0:
+                            joueur2.pv -= joueur1.patt
+                            main.fenetre.blit(("Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))
+                    elif defend_button.collidepoint(event.pos):
+                        # Logique de défense
+                        # Réduisez les dégâts subis par le joueur ou augmentez sa défense
+                        playershield_on = 1
+                        main.fenetre.blit(("Vous vous préparez votre bouclier."), (50, 50))
+                    elif flee_button.collidepoint(event.pos):
+                        # Logique de fuite
+                        # Terminez la partie ou retournez à un écran précédent
+                        main.fenetre.blit(("Vous avez fui le combat."), (50, 50))
+                        return joueur1.pv, joueur2.pv
+                if joueur_actif == joueur2:
+                    if attack_button.collidepoint(event.pos):
+                        # Logique d'attaque
+                        # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
+                        if player1shield_on == 1:
+                            joueur1.pv -= (joueur2.patt - joueur1.pam)
+                            main.fenetre.blit(("Il a bloqué l'attaque ! Il lui reste " + str(joueur1.pv) + " PV"), (50, 50))                    
+                        if player1shield_on == 0:
+                            joueur1.pv -= joueur2.patt
+                            main.fenetre.blit(("Il lui reste " + str(joueur1.pv) + " PV"), (50, 50))
+                    elif defend_button.collidepoint(event.pos):
+                        # Logique de défense
+                        # Réduisez les dégâts subis par le joueur ou augmentez sa défense
+                        playershield_on = 1
+                        main.fenetre.blit(("Vous vous préparez votre bouclier."), (50, 50))
+                    elif flee_button.collidepoint(event.pos):
+                        # Logique de fuite
+                        # Terminez la partie ou retournez à un écran précédent
+                        main.fenetre.blit(("Vous avez fui le combat."), (50, 50))
+                        return joueur1.pv, joueur2.pv
             
     # Affichez les boutons
     pygame.draw.rect(main.fenetre, main.BLEU, defend_button)
@@ -253,11 +275,6 @@ def combat_pvp_beta(joueur1: Joueur, joueur2: Joueur):
         joueur1.pam = 0
         joueur1.pam_temp_duree = 0
     
-    # Choix du joueur 2
-    
-    
-    
-    
     # Coder le système de bouclier temporaire
     if joueur2.pam_temp_duree > 0:
         joueur2.pam_temp_duree -= 1
@@ -266,7 +283,7 @@ def combat_pvp_beta(joueur1: Joueur, joueur2: Joueur):
         joueur2.pam_temp_duree = 0
     
         
-        # Pensez à coder l'event "police"
+    # Pensez à coder l'event "police"
     if random.randint(0, 100) <= joueur1.proba_police or random.randint(0, 100) <= joueur2.proba_police:
         main.fenetre.blit(text_police, (50, 250))
         joueur1.setCase(7)
@@ -276,6 +293,9 @@ def combat_pvp_beta(joueur1: Joueur, joueur2: Joueur):
         joueur2.setKo(False)
         joueur2.activatePrison()
         return joueur1.pv, joueur1.gold, joueur2.pv, joueur2.gold
+    
+    if joueur_actif == joueur1:
+        joueur_actif = joueur2
         
     # Conditions de victoire et de défaite
     if joueur1.pv <= 0:

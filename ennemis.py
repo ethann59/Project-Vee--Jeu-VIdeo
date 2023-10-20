@@ -42,7 +42,7 @@ class Ennemi:
 class EnnemiImportant(Ennemi): # Uniquement pour James et ses protégés
     def __init__(self):
         super().__init__()
-        self.quest_object = []
+        self.quest_object = None
         self.final_boss = False
         self.case = 0
         self.killed = False # Si c'est True, il n'apparait plus

@@ -1,13 +1,13 @@
 # Importation des modules
 import pygame.font
-import time, sys, random
+import sys, random
 # Importation des fichiers
 import players
 from settings import *
-from place_data import *
 from enemy_data import *
 from object_data import *
-from combat import *
+from players import Joueur
+from ennemis import Ennemi, EnnemiImportant
 from plateau import *
 
 # Variables globales
@@ -40,8 +40,6 @@ grosses_cases_speciales = {
 
 pygame.font.init()
 font = pygame.font.Font(None, 36)  # Crée une police avec une taille de 36 points (vous pouvez ajuster la taille selon vos besoins)
-texte = font.render("Votre texte ici", True, BLANC)  # Texte blanc avec antialiasing
-timer_text = font.render("Temps restant : " + str(duree_timer), True, BLANC)
 inventaire_text = font.render("Inventaire :", True, BLANC)
     
 # Variables graphiques
@@ -58,7 +56,7 @@ pygame.init()
 # Configurer la fenêtre
 taille_fenetre = (1000,644)
 fenetre = pygame.display.set_mode(taille_fenetre)
-pygame.display.set_caption("Project Vee - Developement Build " + version)
+pygame.display.set_caption("Aexo - Le Plan de James - Developement Build " + version)
 
 # Fonction graphiques
 def dessiner_bouton(x, y, largeur, hauteur, couleur, texte, action=None):
@@ -96,6 +94,459 @@ def save():
     """
     pass
 
+def hospital(joueur):
+    # Création du fond du menu
+    menu_surface = pygame.Surface((400, 200))
+    menu_surface.fill(BLANC)
+    menu_surface.set_alpha(200)  # Transparence du fond
+
+    # Affichage du texte
+    texte_surface = font.render("Hôpital", True, BLANC)
+    texte_rect = texte_surface.get_rect()
+    texte_rect.center = (200, 50)
+
+    # Affichage du coût des soins
+    cout_surface = font.render(f"Soins (Coût : {settings.hospital_price} pièces d'or)", True, BLANC)
+    cout_rect = cout_surface.get_rect()
+    cout_rect.center = (200, 100)
+
+    # Affichage du bouton "Se soigner"
+    bouton_se_soigner = pygame.Rect(150, 150, 200, 40)
+    pygame.draw.rect(menu_surface, BLANC, bouton_se_soigner)
+    bouton_surface = font.render("Se soigner", True, BLANC)
+    bouton_rect = bouton_surface.get_rect()
+    bouton_rect.center = bouton_se_soigner.center
+    
+     # Affichage du bouton "Ne pas se soigner"
+    bouton_ne_pas_se_soigner = pygame.Rect(400, 150, 200, 40)
+    pygame.draw.rect(menu_surface, BLANC, bouton_ne_pas_se_soigner)
+    bouton_ne_pas_se_soigner_surface = font.render("Ne pas se soigner", True, BLANC)
+    bouton_ne_pas_se_soigner_rect = bouton_ne_pas_se_soigner_surface.get_rect()
+    bouton_ne_pas_se_soigner_rect.center = bouton_ne_pas_se_soigner.center
+
+
+    # Affichage du menu
+    fenetre.blit(menu_surface, (200, 200))
+    fenetre.blit(texte_surface, texte_rect)
+    fenetre.blit(cout_surface, cout_rect)
+    fenetre.blit(bouton_surface, bouton_rect)
+    
+    # Variables textuelles
+    texte_soin = font.render("Vous vous êtes soigné à l'hôpital. Vie restaurée à {settings.pv_player} points.", True, BLANC)
+    texte_argent = font.render("Argent restant : {joueur.gold} pièces d'or.", True, BLANC)
+    texte_pas_soin = font.render("Désolé, vous n'avez pas assez d'argent pour vous soigner à l'hôpital.", True, BLANC)
+
+    # Vérifie si le joueur clique sur le bouton "Se soigner"
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if bouton_se_soigner.collidepoint(event.pos):
+                # Vérifie si le joueur a suffisamment d'argent pour se soigner
+                if joueur.gold >= gc.settings.hopital_price:
+                    joueur.pv = gc.settings.pv_player  # Réinitialise la vie du joueur à son maximum
+                    joueur.gold -= gc.settings.hopital_price  # Déduit le coût des soins de l'argent du joueur
+                    fenetre.blit(texte_soin, (200, 250))
+                    fenetre.blit(texte_argent, (200, 300))
+                    return joueur.pv, joueur.gold
+                else:
+                    fenetre.blit(texte_pas_soin, (200, 250))
+
+        
+def shop(argent_joueur, inventaire_joueur):
+    while True:
+        fenetre.fill((255, 255, 255))
+        # Afficher la liste des objets disponibles avec leurs prix
+        y = 50
+        for item in items_disponibles:
+            texte = font.render(f"{item.nom}: {item.prix} pièces d'or", True, (0, 0, 0))
+            fenetre.blit(texte, (50, y))
+            y += 30
+        
+        # Afficher l'argent du joueur
+        texte_argent = font.render(f"Argent du joueur: {argent_joueur} pièces d'or", True, (0, 0, 0))
+        fenetre.blit(texte_argent, (50, 10))
+        
+        # Variables textuelles
+        texte_achat = font.render("Vous avez acheté un objet.", True, (0, 0, 0))
+        texte_argent = font.render(f"Argent restant : {argent_joueur} pièces d'or.", True, (0, 0, 0))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Vérifier si un objet a été cliqué
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if 50 <= mouse_x <= 250:
+                    for i, item in enumerate(items_disponibles):
+                        if 50 <= mouse_y <= 50 + 30 * (i + 1):
+                            if argent_joueur >= item.prix:
+                                # Le joueur a assez d'argent, il peut acheter l'objet
+                                argent_joueur -= item.prix
+                                # Ajouter l'objet à l'inventaire du joueur
+                                inventaire_joueur.append(item)
+                                fenetre.blit(texte_achat, (50, 250))
+                            else:
+                                # Le joueur n'a pas assez d'argent pour acheter l'objet
+                                fenetre.blit(texte_argent, (50, 300))
+                                pygame.display.flip()
+                            
+        return argent_joueur, inventaire_joueur
+                                
+
+def prison(joueur):
+    '''Cette fonction sert à controler le joueur quand il est en prison notamment le bloquer tant que il a pas fait 3 tours'''
+    
+    # Variables textuelles
+    
+    text_sortie = font.render("Vous êtes sorti de prison.", True, BLANC)
+    text_prison = font.render("Vous êtes en prison, vous devez attendre 3 tours.", True, BLANC)
+    text_caution = font.render("Voulez-vous payer 100 pièces d'or pour sortir de prison ? (Y/N)", True, BLANC)
+    text_argent = font.render("Vous n'avez pas assez d'argent pour payer la caution.", True, BLANC)
+    
+    if joueur.prison == True:
+        if joueur.prison_timer == 3:
+            joueur.prison = False
+            joueur.prison_timer = 0
+            fenetre.blit(text_sortie, (200, 250))
+        else:
+            joueur.prison_timer += 1
+            fenetre.blit(text_prison, (200, 250))
+            # Demande au joueur si il veut payer pour sortir de prison
+            fenetre.blit(text_caution, (200, 300))
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_y:
+                        if joueur.gold >= 100:
+                            joueur.gold -= 100
+                            joueur.prison = False
+                            joueur.prison_timer = 0
+                            fenetre.blit(text_sortie, (200, 250))
+                        else:
+                            fenetre.blit(text_argent, (200, 300))
+                    elif event.key == pygame.K_n:
+                        fenetre.blit(text_prison, (200, 250))
+    return joueur.prison, joueur.prison_timer
+
+
+
+def combat_pve(joueur : Joueur, ennemi : Ennemi): # Voir pour coder un inventaire au passage
+    fenetre.fill(BLANC)
+    # Variables de combat - Pour vérifier si les boucliers sont actifs
+    enemyshield_on = 0
+    playershield_on = 0
+    show_inventory = False  # Au départ, l'inventaire est masqué
+    grenade_flash_active = False
+    enemy_pv_de_base = ennemi.pv
+    
+    # Variables textuels
+    
+    text_block_attack = font.render(("Il a bloqué l'attaque ! Il lui reste " + str(ennemi.pv) + " PV"), True, BLANC)
+    text_normal_attack = font.render(("Il lui reste " + str(ennemi.pv) + " PV"), True, BLANC)
+    text_prepare_shield = font.render(("Vous vous préparez votre bouclier."), True, BLANC)
+    text_no_run = font.render(("Vous ne pouvez pas fuir, vous devez le tuer !"), True, BLANC)
+    text_run = font.render(("Vous avez fui le combat."), True, BLANC)
+    attack_text= font.render("Attaquer", True, BLANC)
+    defend_text = font.render("Défendre", True, BLANC)
+    flee_text = font.render("Fuir", True, BLANC)
+    inventory_text = font.render("Inventaire", True, BLANC)
+    text_pv_player = font.render(("Vous avez " + str(joueur.pv) + " PV"), True, BLANC)
+    text_pv_enemy = font.render(("L'ennemi a " + str(ennemi.pv) + " PV"), True, BLANC)
+    text_shield_player = font.render(("Vous avez votre bouclier activé"), True, BLANC)
+    text_no_shield_player = font.render(("Vous avez votre bouclier désactivé"), True, BLANC)
+    text_grenade_flash = font.render(("L'ennemi est aveuglé"), True, BLANC)
+    text_attack_enemy = font.render(("L'ennemi attaque"), True, BLANC)
+    text_block_attack_enemy = font.render(("Vous avez bloqué l'attaque ! Il vous reste " + str(joueur.pv) + " PV"), True, BLANC)
+    text_defend_enemy = font.render(("L'ennemi se défend"), True, BLANC)
+    text_police = font.render(("Wuwu ! Ceci est une descente de la police !"), True, BLANC)
+    text_lose = font.render(("Vous avez perdu !"), True, BLANC)
+    text_win = font.render(("Vous avez gagné ! Vous avez obtenu " + str(ennemi.gold)), True, BLANC)
+    if isinstance(ennemi, EnnemiImportant):
+        text_quest_object = font.render(("Vous avez obtenu un objet de quête !" + str(ennemi.quest_object.nom)), True, BLANC)
+    
+    
+    # Créez des boutons "Attaquer", "Défendre" et "Fuir"
+    defend_button = pygame.Rect(200, 200, 100, 50)
+    flee_button = pygame.Rect(350, 200, 100, 50)
+    attack_button = pygame.Rect(50, 200, 100, 50)  # Zone cliquable du bouton d'attaque
+    inventory_button = pygame.Rect(500, 200, 100, 50)
+    
+    # Stocker le texte dans une variable pour le changer sur l'affichage
+    # Penser à afficher les images des ennemis et du joueur
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            en_cours = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # Bouton gauche de la souris
+                if attack_button.collidepoint(event.pos):
+                    # Logique d'attaque
+                    # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
+                    if enemyshield_on == 1:
+                        ennemi.pv -= (joueur.patt - ennemi.pam)
+                        fenetre.blit(text_block_attack, (50, 50))                    
+                    if enemyshield_on == 0:
+                        ennemi.pv -= joueur.patt
+                        fenetre.blit(text_normal_attack, (50, 50))
+                elif defend_button.collidepoint(event.pos):
+                    # Logique de défense
+                    # Réduisez les dégâts subis par le joueur ou augmentez sa défense
+                    playershield_on = 1
+                    fenetre.blit(text_prepare_shield, (50, 50))
+                elif flee_button.collidepoint(event.pos):
+                    # Logique de fuite
+                    # Terminez la partie ou retournez à un écran précédent
+                    if isinstance(ennemi, EnnemiImportant):
+                        fenetre.blit(text_no_run, (50, 50))
+                    else:
+                        fenetre.blit(text_run, (50, 50))
+                        return joueur.pv, joueur.gold
+            
+    # Affichez les boutons
+    pygame.draw.rect(fenetre, BLEU, defend_button)
+    pygame.draw.rect(fenetre, VERT, flee_button)
+    pygame.draw.rect(fenetre, ROUGE, attack_button)
+    pygame.draw.rect(fenetre, BLEU, inventory_button)  # Bouton vert pour l'inventaire
+
+    # Affichez les textes des boutons
+    
+    fenetre.blit(attack_text, (attack_button.x + 10, attack_button.y + 10))
+    fenetre.blit(defend_text, (defend_button.x + 10, defend_button.y + 10))
+    fenetre.blit(flee_text, (flee_button.x + 10, flee_button.y + 10))
+    fenetre.blit(inventory_text, (inventory_button.x + 10, inventory_button.y + 10))
+    
+    
+    # Afficher l'inventaire si le bouton est cliqué
+    # Si l'inventaire est affiché, dessinez le contenu de l'inventaire ici
+    if show_inventory:
+    # Dessinez les éléments de l'inventaire
+    # Par exemple, affichez une liste d'objets avec des quantités
+    # Assurez-vous de positionner et de styliser correctement l'affichage de l'inventaire
+    # Vous pouvez utiliser une boucle pour parcourir les éléments de l'inventaire et les afficher
+        pass
+    # Affichez les PV du joueur et de l'ennemi
+    
+    fenetre.blit(text_pv_player, (50, 100))
+    
+    fenetre.blit(text_pv_enemy, (50, 150))
+        
+    if playershield_on == 1:
+        fenetre.blit(text_shield_player, (50, 150))
+    if playershield_on == 0:
+        fenetre.blit(text_no_shield_player, (50, 150))
+    
+    # Coder le système de bouclier temporaire
+    if joueur.pam_temp_duree > 0:
+        joueur.pam_temp_duree -= 1
+    elif joueur.pam_temp_duree == 0:
+        joueur.pam = 0
+        joueur.pam_temp_duree = 0
+    
+    # Choix de l'ennemi
+    if grenade_flash_active == True:
+        fenetre.blit(text_grenade_flash, (50, 250))
+        temp_turn += 1
+        if temp_turn == 2:
+            grenade_flash_active = False
+            temp_turn = 0
+    else:
+        ennemi_choice = random.randint(1, 2)
+        if ennemi_choice == 1:
+            fenetre.blit(text_attack_enemy, (50, 250))
+            if playershield_on == 1:
+                joueur.pv -= (ennemi.patt - joueur.pam)
+                fenetre.blit(text_block_attack, (50, 300))
+            if playershield_on == 0:
+                joueur.pv -= ennemi.patt
+                fenetre.blit(text_pv_player, (50, 300))
+        if ennemi_choice == 2:
+            fenetre.blit(text_defend_enemy, (50, 250))
+            enemyshield_on = 1
+        
+    # Pensez à coder l'event "police"
+    if random.randint(0, 100) <= joueur.proba_police:
+        fenetre.blit(text_police, (50, 250))
+        joueur.setCase(7)
+        joueur.setKo(False)
+        joueur.activatePrison()
+        return joueur.pv, joueur.gold
+        
+    # Conditions de victoire et de défaite
+    if joueur.pv <= 0:
+        fenetre.blit(text_lose, (50, 350))
+        joueur.setCase(20)
+        joueur.setKo(True)
+        return joueur.pv, joueur.gold
+    if ennemi.pv <= 0:
+        fenetre.blit(text_win, (50, 350))
+        joueur.gold += ennemi.gold
+        joueur.addScore(enemy_pv_de_base)
+        if isinstance(ennemi, EnnemiImportant):
+            joueur.inventaire.append(ennemi.quest_object)
+            fenetre.blit(text_quest_object, (50, 400))
+        
+    
+    return joueur.pv, joueur.gold
+
+def combat_pvp(joueur1: Joueur, joueur2: Joueur):
+    print("combat pvp")
+    return joueur1.pv, joueur2.pv
+
+def combat_pvp(joueur1: Joueur, joueur2: Joueur):
+    fenetre.fill(BLANC)
+    # Variables de combat - Pour vérifier si les boucliers sont actifs
+    player1shield_on = 0
+    player2shield_on = 0
+    show_inventory = False  # Au départ, l'inventaire est masqué
+    grenade_flash_active = False
+    joueur_actif = joueur1
+    
+    # Créez des boutons "Attaquer", "Défendre" et "Fuir"
+    defend_button = pygame.Rect(200, 200, 100, 50)
+    flee_button = pygame.Rect(350, 200, 100, 50)
+    attack_button = pygame.Rect(50, 200, 100, 50)  # Zone cliquable du bouton d'attaque
+    inventory_button = pygame.Rect(500, 200, 100, 50)
+    
+    # Variables textuels
+    text_police = font.render(("Wuwu ! Ceci est une descente de la police !"), True, BLANC)
+    
+    # Stocker le texte dans une variable pour le changer sur l'affichage
+    # Penser à afficher les images des ennemis et du joueur
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            en_cours = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # Bouton gauche de la souris
+                if joueur_actif == joueur1:
+                    if attack_button.collidepoint(event.pos):
+                        # Logique d'attaque
+                        # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
+                        if player2shield_on == 1:
+                            joueur2.pv -= (joueur1.patt - joueur2.pam)
+                            fenetre.blit(("Il a bloqué l'attaque ! Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))                    
+                        if player2shield_on == 0:
+                            joueur2.pv -= joueur1.patt
+                            fenetre.blit(("Il lui reste " + str(joueur2.pv) + " PV"), (50, 50))
+                    elif defend_button.collidepoint(event.pos):
+                        # Logique de défense
+                        # Réduisez les dégâts subis par le joueur ou augmentez sa défense
+                        playershield_on = 1
+                        fenetre.blit(("Vous vous préparez votre bouclier."), (50, 50))
+                    elif flee_button.collidepoint(event.pos):
+                        # Logique de fuite
+                        # Terminez la partie ou retournez à un écran précédent
+                        fenetre.blit(("Vous avez fui le combat."), (50, 50))
+                        return joueur1.pv, joueur2.pv
+                if joueur_actif == joueur2:
+                    if attack_button.collidepoint(event.pos):
+                        # Logique d'attaque
+                        # Réduisez les PV de l'ennemi ou augmentez les dégâts du joueur
+                        if player1shield_on == 1:
+                            joueur1.pv -= (joueur2.patt - joueur1.pam)
+                            fenetre.blit(("Il a bloqué l'attaque ! Il lui reste " + str(joueur1.pv) + " PV"), (50, 50))                    
+                        if player1shield_on == 0:
+                            joueur1.pv -= joueur2.patt
+                            fenetre.blit(("Il lui reste " + str(joueur1.pv) + " PV"), (50, 50))
+                    elif defend_button.collidepoint(event.pos):
+                        # Logique de défense
+                        # Réduisez les dégâts subis par le joueur ou augmentez sa défense
+                        playershield_on = 1
+                        fenetre.blit(("Vous vous préparez votre bouclier."), (50, 50))
+                    elif flee_button.collidepoint(event.pos):
+                        # Logique de fuite
+                        # Terminez la partie ou retournez à un écran précédent
+                        fenetre.blit(("Vous avez fui le combat."), (50, 50))
+                        return joueur1.pv, joueur2.pv
+            
+    # Affichez les boutons
+    pygame.draw.rect(fenetre, BLEU, defend_button)
+    pygame.draw.rect(fenetre, VERT, flee_button)
+    pygame.draw.rect(fenetre, ROUGE, attack_button)
+    pygame.draw.rect(fenetre, BLEU, inventory_button)  # Bouton vert pour l'inventaire
+
+    # Affichez les textes des boutons
+    
+    fenetre.blit(("Attaquer"), (attack_button.x + 10, attack_button.y + 10))
+    fenetre.blit(("Défendre"), (defend_button.x + 10, defend_button.y + 10))
+    fenetre.blit(("Fuir"), (flee_button.x + 10, flee_button.y + 10))
+    fenetre.blit(("Inventaire"), (inventory_button.x + 10, inventory_button.y + 10))
+    
+    
+    # Afficher l'inventaire si le bouton est cliqué
+    # Si l'inventaire est affiché, dessinez le contenu de l'inventaire ici
+    if show_inventory:
+    # Dessinez les éléments de l'inventaire
+    # Par exemple, affichez une liste d'objets avec des quantités
+    # Assurez-vous de positionner et de styliser correctement l'affichage de l'inventaire
+    # Vous pouvez utiliser une boucle pour parcourir les éléments de l'inventaire et les afficher
+        pass
+    # Affichez les PV du joueur et de l'ennemi
+    
+    fenetre.blit((joueur1.name, " a " + str(joueur1.pv) + " PV"), (50, 100))
+    
+    fenetre.blit((joueur1.name, " a " + str(joueur2.pv) + " PV"), (50, 150))
+        
+    if player1shield_on == 1:
+        fenetre.blit(("Vous avez votre bouclier activé"), (50, 150))
+    if player2shield_on == 0:
+        fenetre.blit(("Vous avez votre bouclier désactivé"), (50, 150))
+    
+       # Coder le système de bouclier temporaire
+    if joueur1.pam_temp_duree > 0:
+        joueur1.pam_temp_duree -= 1
+    elif joueur1.pam_temp_duree == 0:
+        joueur1.pam = 0
+        joueur1.pam_temp_duree = 0
+    
+    # Coder le système de bouclier temporaire
+    if joueur2.pam_temp_duree > 0:
+        joueur2.pam_temp_duree -= 1
+    elif joueur2.pam_temp_duree == 0:
+        joueur2.pam = 0
+        joueur2.pam_temp_duree = 0
+    
+        
+    # Pensez à coder l'event "police"
+    if random.randint(0, 100) <= joueur1.proba_police or random.randint(0, 100) <= joueur2.proba_police:
+        fenetre.blit(text_police, (50, 250))
+        joueur1.setCase(7)
+        joueur1.setKo(False)
+        joueur1.activatePrison()
+        joueur2.setCase(7)
+        joueur2.setKo(False)
+        joueur2.activatePrison()
+        return joueur1.pv, joueur1.gold, joueur2.pv, joueur2.gold
+    
+    if joueur_actif == joueur1:
+        joueur_actif = joueur2
+        
+    # Conditions de victoire et de défaite
+    if joueur1.pv <= 0:
+        fenetre.blit(("Vous avez perdu !"), (50, 350))
+        joueur1.setCase(20)
+        joueur1.setKo(True)
+        return joueur1.pv, joueur1.gold
+    if joueur2.pv <= 0:
+        fenetre.blit(("Vous avez gagné !"), (50, 350))
+        joueur1.gold += joueur2.gold
+        joueur2.setCase(20)
+        joueur2.setKo(True)
+        # Vérifier si le joueur 2 a un objet de quête et si il en a un, de piocher parmi ce qu'il a, et de le donner au joueur 1
+        if QuestObject in joueur2.inventaire:
+            # On liste les objets de quête que le joueur 2 a
+            j2_quest_objects = []
+            for i in joueur2.inventaire:
+                if isinstance(i, QuestObject):
+                    j2_quest_objects.append(i)
+            # On en choisit un au hasard
+            j2_quest_object = random.choice(j2_quest_objects)
+            # On le donne au joueur 1
+            joueur1.inventaire.append(j2_quest_object)
+            # On le retire du joueur 2
+            joueur2.inventaire.remove(j2_quest_object)
+        return joueur1.pv, joueur1.gold
+            
+        
+
 
 # États du jeu
 ETAT_MENU = 0
@@ -128,7 +579,7 @@ def menu_principal():
         fenetre.fill(BLANC)  # Efface l'écran
         fenetre.blit(background_img, (0, 0))
         # Dessinez vos boutons dans l'état du menu
-        titre = font.render("Project Vee", True, BLANC)
+        titre = font.render("Aexo - Le Plan de James", True, BLANC)
         sous_titre = font.render("Version " + version, True, BLANC)
         fenetre.blit(titre, (100, 100))
         fenetre.blit(sous_titre, (100, 150))

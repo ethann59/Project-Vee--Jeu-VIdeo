@@ -35,6 +35,9 @@ class Ennemi:
     def addPv(self : Ennemi, pv : int) :
         self.pv += pv
         
+    def setPv(self : Ennemi, pv : int) :
+        self.pv = pv
+        
     def setImage(self : Ennemi, image : str) :
         self.image = pygame.image.load(image)
         self.image = pygame.transform.scale(self.image, (36, 36))

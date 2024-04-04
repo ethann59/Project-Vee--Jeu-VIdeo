@@ -6,6 +6,12 @@ Jeu vidéo réalisé dans le cadre de la SAE Jeu Vidéo. Le principe du jeu fusi
 
 Dans le cadre de ce projet, les parties rapides sont limités à 15 minutes. Le joueur qui a le plus de points à la fin de la partie gagne dans ce cas.
 
+## Note de version
+
+Malgré le fait que le jeu soit jouable notamment le déplacement qui marche, le jeu n'est clairement pas fini. Il manque le système d'inventaire notamment et il y a pas mal de bugs. Il est jouable mais il n'est pas fini.
+
+Il y a deux fichiers preview que j'ai utilisé pour le trailer mais ça donne que un visuel (visuel qui ne représente pas le jeu final).
+
 ## Installation
 
 ### Prérequis
@@ -77,7 +83,6 @@ Le background a été réalisé avec DALL-E 3 via Bing
 
 ## Patch notes
 
-[A voir si je supprime ça à la fin]
 ### Patch 0.0.7 R2
 
 Finalisation du référencement des cases, mise en place d'un placement aléatoire des ennemis importants.
@@ -98,4 +103,4 @@ Mise à jour visuelle des cases.
 Système de combat fini.
 Système de case spéciaux (magasin, hopital, etc) fini.
 Nouveau système de timer.
-Il reste plus que le système d'inventaire, le PvP et le système de fin de partie.
+Il reste plus que le système d'inventaire.

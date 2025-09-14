@@ -312,7 +312,7 @@ def jeu(nb_joueurs, list_playername):
         Joueur3.setImage("img/sprites/bob-aquaman.png")
         Joueur4 = players.Joueur()
         Joueur4.setNom(list_playername[3])
-        Joueur4.setImage("img/sprites/plagiat-murder-drones-lol.png")
+        Joueur4.setImage("img/sprites/robot.png")
         list_players.append(Joueur1)
         list_players.append(Joueur2)
         list_players.append(Joueur3)

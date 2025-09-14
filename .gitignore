@@ -1,2 +1,3 @@
-main2.py
 debug.log
+/__pycache__/
+/.vscode/

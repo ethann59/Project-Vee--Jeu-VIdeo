@@ -30,6 +30,6 @@ Le menu principal permet de lancer une partie rapide ou personnalisée, ou de qu
 
 ## Crédits & Licence
 
-Merci à ELUECQUE Anthony et DUVET Alexandre pour leur aide au codage.
+Merci à Anthony et Alexandre pour leur aide au codage.
 Merci à The Skindex pour l'outil de création des personnages.
 Merci à Freepik, Khoon Lay Gan et Pngtree pour les pictogrammes utilisés dans le jeu.
